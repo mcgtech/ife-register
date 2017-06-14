@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    IFE Register
+{% endblock %}
+{% block content %}
+    <div class="intro">
+        {% if user.is_authenticated == True %}
+            <h1>IFE Register</h1>
+        {% endif %}
+        <p>Welcome to the Institution of Fire Engineers (IFE) Register.</p>
+        <p>This system maintains a register of competent fire engineers practicing in Scotland.</p>
+    </div>
+    <div id="footer">
+        &copy;IFE Scotland 2017
+    </div>
+{% endblock %}

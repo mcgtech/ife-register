@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load common_extras %}
+{% block title %}
+    {% if config.is_edit_form %}
+        Edit engineer
+    {% else %}
+        Add new engineer
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+
+{% block css %}
+    {% include 'partials/summernote_editor_css_includes.html' %}
+    <link rel="stylesheet" href="{% static 'css/engineer_edit.css' %}">
+{% endblock %}
+
+{% block js %}
+    {% include 'partials/inject_js_data.html' %}
+    {% include 'partials/summernote_editor_js_includes.html' %}
+    {% include 'partials/form_edit_js_includes.html' %}
+    {% include 'partials/datepicker_js_includes.html' %}
+    {% include 'partials/formset_js_includes.html' %}
+    {% include 'partials/ideal_postcodes_js_includes.html' %}
+    <script type="text/javascript" src="{% static 'js/engineer_edit.js' %}"></script>
+{% endblock %}
+{% block content %}
+    {% load crispy_forms_tags %}
+    <form action="{{ config.the_action }}" method="POST" id="engineer_edit_form" class="engineer_details">
+        {% crispy form %}
+        <div id="address" class="tab-pane">
+            {% crispy address_form %}
+        </div>
+        <div id="phones" class="tab-pane">
+            {% crispy phone_form_set phone_helper %}
+        </div>
+    </form>
+
+{% endblock %}

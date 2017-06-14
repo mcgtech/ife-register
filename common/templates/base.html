@@ -1,0 +1,57 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <!--https://www.silviogutierrez.com/blog/django-tip-templates-and-page-titles/  -->
+      <title>
+        {% block title %}{% endblock %}
+      </title>
+        <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}"/>
+        <!-- https://developers.google.com/speed/libraries/#jquery-ui -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <!-- http://getbootstrap.com/getting-started/ -->
+        {% include 'partials/bootstrap_base_css_includes.html' %}
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/ife.css' %}">
+        {% if user.is_authenticated %}
+            <link rel="stylesheet" href="{% static 'js/bootstrap_dropdown_hover/css/bootstrap-dropdownhover.css' %}">
+            <script type="text/javascript" src="{% static 'js/bootstrap_dropdown_hover/js/bootstrap-dropdownhover.min.js' %}"></script>
+        {% endif %}
+        {% block js %}
+        {% endblock %}
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        {% if user.is_authenticated == False %}
+            <div class="page-header">
+                <a href="{% url 'ife_register_login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <h1><a href="/">Institution of Fire Engineers (IFE) Register</a></h1>
+                <h3>A register of competent fire engineers practicing in Scotland.</h3>
+            </div>
+        {% endif %}
+        <div class="content container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    {% if user.is_authenticated %}
+                        {% include "nav_bar.html" %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {% include 'partials/errors.html' %}
+                    {% include 'partials/messages.html' %}
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

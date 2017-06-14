@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Engineer searching{% endblock %}
+
+{% load staticfiles %}
+
+<!--https://simpleisbetterthancomplex.com/2015/12/04/package-of-the-week-django-widget-tweaks.html-->
+{% load widget_tweaks %}
+{% block css %}
+    {% include 'partials/django_tables2_css_includes.html' %}
+{% endblock %}
+{% block js %}
+    {% include 'partials/django_tables2_js_includes.html' %}
+    {% include 'partials/datepicker_js_includes.html' %}
+{% endblock %}
+
+{% block content %}
+  <form method="get">
+    <div class="well">
+      <!--# if I change this then also change: /Users/stephenmcgonigal/django_projs/client/filters.py -->
+      <div class="row">
+        <div class="form-group col-sm-3">
+          {{ filter.form.forename.label_tag }}
+          {% render_field filter.form.forename class="form-control" %}
+        </div>
+      </div>
+      {% include 'partials/filter_buttons.html' %}
+      <button style="float:right;" type="button" onclick="javascript:window.location='{% url 'engineer_new' %}';" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> Engineer
+      </button>
+    </div>
+  </form>
+  {% load render_table from django_tables2 %}
+  <!--/Users/stephenmcgonigal/django_projs/common/templates/table_with_pagination.html-->
+  {% render_table engineer_table "table_with_pagination.html" %}
+{% endblock %}

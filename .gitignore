@@ -1,0 +1,17 @@
+*.pyc
+*~
+__pycache__
+cmenv
+db.sqlite3
+.DS_Store
+*.json
+migrations/
+!migrations/__init__.py
+
+# Dev environment stuff
+.vagrant
+/provisioning/playbook.retry
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/deployment.xml
+.idea/codeStyleSettings.xml

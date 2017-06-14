@@ -48,3 +48,5 @@ python manage.py migrate register
 
 
 python manage.py shell < all_build/setup_users_and_groups.py
+
+git: https://github.com/mcgtech/ife-register.git

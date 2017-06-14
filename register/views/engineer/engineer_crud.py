@@ -30,10 +30,8 @@ def engineer_edit(request, pk):
 def manage_engineer(request, engineer_id=None):
     js_dict = {}
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')
-    # formsets
-    # phones
-    phone_form_set = get_formset(config, Engineer, Telephone, PhoneForm, "phones", Telephone.objects.filter(engineer_id=engineer_id))
     phone_helper = PhoneFormSetHelper()
+    phone_form_set = get_phones_formset(config, engineer_id)
     msg = 'You have successfully deleted the ' + config.class_name + ' ' + str(config.primary_entity)
 
     if engineer_id is None:
@@ -53,6 +51,7 @@ def manage_engineer(request, engineer_id=None):
             apply_auditable_info(created_primary_entity, request)
             created_primary_entity.address = address
             created_primary_entity.save()
+            phone_form_set = get_phones_formset(config, engineer_id)
             save_many_relationship(phone_form_set)
             msg_once_only(request, 'Saved ' + config.class_name, settings.SUCC_MSG_TYPE)
             action = get_form_edit_url(None, created_primary_entity.id, config.class_name)
@@ -77,3 +76,6 @@ def manage_engineer(request, engineer_id=None):
                                                                   'js_data' : js_data,
                                                                   'config' : config,
                                                                   'form_errors': form_errors,})
+
+def get_phones_formset(config, engineer_id):
+    return get_formset(config, Engineer, Telephone, PhoneForm, "phones", Telephone.objects.filter(engineer_id=engineer_id))

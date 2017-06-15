@@ -6,6 +6,7 @@ from collections import namedtuple
 from django.shortcuts import get_object_or_404, redirect
 from django.forms import inlineformset_factory
 from common.views.auditable import apply_auditable_info
+from common.views.authentication import *
 
 def home_page(request):
     return render(request, 'home_page.html', {})
@@ -38,8 +39,13 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
             cancel_url = redirect(cancel_redirect_name, pk=parent_id).url
         else:
             cancel_url = redirect(cancel_redirect_name).url
+    save_text = ''
+    if applicant_user(request.user):
+        save_text = 'Submit Application'
+    if engineer_user(request.user):
+        save_text = 'Submit Changes'
 
-    return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id, 'Submit Application')
+    return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id, save_text)
 
 
 def get_form_add_url(parent_id, class_name):

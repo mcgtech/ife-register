@@ -3,6 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Button, Div, Field
 from crispy_forms.bootstrap import TabHolder, Tab, FormActions, InlineField, PrependedText
 from common.forms import *
+from common.views.authentication import *
 
 # had to use helper as shown in https://blog.bixly.com/awesome-forms-django-crispy-forms
 # otherwise tabs doesn't work
@@ -21,6 +22,7 @@ class EngineerForm(EditForm, AuditableForm):
         pi_help = '<p>Okay nearly there, let us know the details if you have current Professional Indemnity (PI) insurance.</p>'
         pi_help += '<p>Once you are done simply click Submit and then we will be in touch.</p>'
         pi_help = get_help_markup(pi_help)
+
         self.helper.layout = Layout(
                 TabHolder(
                     Tab('1. About You',
@@ -40,7 +42,7 @@ class EngineerForm(EditForm, AuditableForm):
                         )),
                     Tab('4. Professional Indemnity', HTML(pi_help),
                         Div(
-                            Div(PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', css_class="col-sm-6"),
+                            Div(PrependedText('pi_insurance_cover', get_base_ccy_prefix()), 'pi_renewal_date', css_class="col-sm-6"),
                             Div('pi_company', css_class="col-sm-6")),
                         ),
                     Tab(
@@ -50,7 +52,6 @@ class EngineerForm(EditForm, AuditableForm):
                         'modified_by',
                         'modified_on'
                     ),))
-
         self.prepare_required_field('title', 'Title')
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')

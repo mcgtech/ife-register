@@ -29,3 +29,6 @@ def handle_delete_request(request, config, url, msg_suffix = ''):
         redir = redirect(url)
 
     return redir
+
+def get_base_ccy_prefix():
+    return '£'

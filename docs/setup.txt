@@ -30,6 +30,8 @@ pip install "django-constance[database]"
 pip install psycopg2
 # https://github.com/SmileyChris/django-countries
 pip install django-countries
+# https://github.com/Alir3z4/django-crequest
+pip install django-crequest
 
 
 psql

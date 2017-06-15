@@ -15,3 +15,6 @@ button#idpc_button {
     clear:both;
     margin-top:10px;
 }
+#engineer_edit_form li:last-child{
+    display:none;
+}

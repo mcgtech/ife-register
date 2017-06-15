@@ -9,8 +9,6 @@ User.objects.create_superuser('admin', 'a@a.com', 'xxx')
 
 admin_group = Group(name="admin")
 admin_group.save()
-appl_group = Group(name="applicant")
-appl_group.save()
 engineers_group = Group(name="engineer")
 engineers_group.save()
 approver_group = Group(name="approver")

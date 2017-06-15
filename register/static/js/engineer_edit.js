@@ -1,7 +1,16 @@
 $(function(){
     setup_contact_details();
     setup_datepickers();
+    handle_log_visibility();
 });
+
+function handle_log_visibility()
+{
+    if (data_from_django.show_log)
+    {
+        $('#engineer_edit_form li:last-child').show();
+    }
+}
 
 function setup_contact_details()
 {

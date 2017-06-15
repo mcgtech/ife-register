@@ -12,22 +12,29 @@ from collections import namedtuple
 from register.models import Engineer, Address, Telephone
 from common.forms import *
 
+
+def engineer_application(request):
+    return manage_engineer(request, None, True)
+
+
 @login_required
 @user_passes_test(admin_user, 'ife_register_login')
 def engineer_new(request):
-    return manage_engineer(request, None)
+    return manage_engineer(request, None, False)
 
 
 @login_required
 @user_passes_test(admin_user, 'ife_register_login')
 def engineer_edit(request, pk):
-    return manage_engineer(request, pk)
+    return manage_engineer(request, pk, False)
 
+def show_log(request):
+    return request is None or (anonymous_user(request.user) == False and engineer_user(request.user) == False)
 
 # http://stackoverflow.com/questions/29758558/inlineformset-factory-create-new-objects-and-edit-objects-after-created
 # https://gist.github.com/ibarovic/3092910
 @transaction.atomic
-def manage_engineer(request, engineer_id=None):
+def manage_engineer(request, engineer_id=None, registration=False):
     js_dict = {}
     del_request = None
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')
@@ -64,7 +71,7 @@ def manage_engineer(request, engineer_id=None):
         primary_entity_form = EngineerForm(instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form,
                                            cancel_url=config.cancel_url, save_text=config.save_text)
 
-    if engineer_id is None:
+    if anonymous_user(request.user) == False and engineer_id is None:
         add_msg = 'Adding a new ' + config.class_name
         msg_once_only(request, add_msg, settings.WARN_MSG_TYPE)
 
@@ -72,6 +79,7 @@ def manage_engineer(request, engineer_id=None):
     address_form_errors = form_errors_as_array(address_form)
     form_errors = primary_entity_form_errors + address_form_errors
     set_deletion_status_in_js_data(js_dict, request.user, admin_user)
+    js_dict['show_log'] = show_log(request)
     js_data = json.dumps(js_dict)
 
     return render(request, 'engineer/engineer_edit.html', {'form': primary_entity_form,

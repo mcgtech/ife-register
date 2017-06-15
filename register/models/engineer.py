@@ -40,10 +40,10 @@ class Engineer(Auditable):
     middle_name = models.CharField(max_length=100, blank=True)
     forename = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    employer = models.CharField(max_length=200)
+    employer = models.CharField(max_length=200, blank=True)
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
-    pi_insurance_cover = models.FloatField(default=0.0, verbose_name='Annual cover')
+    pi_insurance_cover = models.FloatField(null=True, default=0.0, verbose_name='Annual cover')
     pi_renewal_date = models.DateField(null=True, blank=True, verbose_name='Renewal date')
     pi_company = models.CharField(max_length=100, blank=True, verbose_name='Insurance company')
     # experience
@@ -87,11 +87,11 @@ class Engineer(Auditable):
         (EC_FELL, 'Fellow'),
     )
     ec_member_grade = models.IntegerField(choices=ENG_COUN_GRADES, default=None, verbose_name='council grade')
-    ec_member_no = models.CharField(max_length=100, verbose_name='council number')
+    ec_member_no = models.CharField(max_length=100, blank=True, verbose_name='council number')
     ec_member_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
     # other
     other_inst = models.TextField(blank=True, verbose_name='other institutions')
-    other_inst_no = models.CharField(max_length=100, verbose_name='membership number')
+    other_inst_no = models.CharField(max_length=100, blank=True, verbose_name='membership number')
     other_inst_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
     # add mem
     add_mem = models.TextField(blank=True, verbose_name='Additional memberships')

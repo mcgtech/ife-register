@@ -11,19 +11,21 @@ class EngineerForm(EditForm, AuditableForm):
         super().__init__(*args, **kwargs)
         self.helper.layout = Layout(
                 TabHolder(
-                    Tab('Contact Details',
+                    Tab('About You',
                         Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
                     Tab('Professional Indemnity', PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', 'pi_company',
                         ),
                     Tab('Experience', 'build_std_know', 'type_of_work',
                         ),
                     Tab('Institution Membership',
-                        Fieldset('IFE', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date', css_class="con_field"),
-                        Fieldset('Engineering Council', 'ec_member_grade', 'ec_member_no', 'ec_member_reg_date', css_class="con_field"),
-                        Fieldset('Other Institution', 'other_inst', 'other_inst_no', 'other_inst_reg_date', css_class="con_field"),
-                        'add_mem',
-                        'cpd',
+                        Div(
+                            Div(Fieldset('IFE', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date', css_class="ife"), css_class="col-sm-6"),
+                            Div(Fieldset('Engineering Council', 'ec_member_grade', 'ec_member_no', 'ec_member_reg_date',css_class="ec"), css_class="col-sm-6")
                         ),
+                        Div(
+                            Div(Fieldset('Other Institution', 'other_inst', 'other_inst_no', 'other_inst_reg_date', css_class="oi"), css_class="col-sm-6"),
+                            Div(Fieldset('Additional Information', 'add_mem', 'cpd', css_class="ai"), css_class="col-sm-6") ,
+                        )),
                     Tab(
                         'Log',
                         'created_by',

@@ -1,5 +1,6 @@
 $(function(){
     setup_contact_details();
+    setup_datepickers();
 });
 
 function setup_contact_details()
@@ -16,4 +17,10 @@ function setup_phone_formsets()
     setTimeout(function(){
             $('#phones tbody tr').formset({prefix: 'phones'});
         }, 10);
+}
+
+function setup_datepickers()
+{
+    var options = get_basic_date_picker_options();
+    $("#id_engineer-pi_renewal_date").datepicker(options);
 }

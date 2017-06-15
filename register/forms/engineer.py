@@ -1,7 +1,7 @@
 from register.models import Engineer, Address, Telephone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Button, Div, Field
-from crispy_forms.bootstrap import TabHolder, Tab, FormActions, InlineField
+from crispy_forms.bootstrap import TabHolder, Tab, FormActions, InlineField, PrependedText
 from common.forms import *
 
 # had to use helper as shown in https://blog.bixly.com/awesome-forms-django-crispy-forms
@@ -13,7 +13,10 @@ class EngineerForm(EditForm, AuditableForm):
                 TabHolder(
                     Tab('Contact Details',
                         Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
-                    Tab('Main', 'employer'),
+                    Tab('Professional Indemnity', PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', 'pi_company',
+                        ),
+                    Tab('Experience', 'build_std_know', 'type_of_work',
+                        ),
                     Tab(
                         'Log',
                         'created_by',
@@ -26,6 +29,9 @@ class EngineerForm(EditForm, AuditableForm):
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')
         self.prepare_required_field('employer', 'Employer')
+        widgets = {
+            'build_std_know': forms.TextInput(attrs={'placeholder': 'Name'}),
+            'type_of_work': forms.Textarea(attrs={'placeholder': 'Enter description here'}),}
 
     # if I make the following field required in the model, then as I am using tabs, the default form validation for
     # required fields in crispy forms for bootstrap shows a popover against the offending field when save is clicked
@@ -45,7 +51,9 @@ class EngineerForm(EditForm, AuditableForm):
 
     class Meta(AuditableForm.Meta):
         model = Engineer
-        fields = get_auditable_fields() + ('title', 'forename', 'middle_name', 'surname', 'employer')
+        fields = get_auditable_fields() + ('title', 'forename', 'middle_name', 'surname', 'employer',
+                                           'pi_insurance_cover', 'pi_renewal_date', 'pi_company',
+                                           'build_std_know', 'type_of_work')
 
 
 

@@ -42,6 +42,26 @@ class Engineer(Auditable):
     surname = models.CharField(max_length=100)
     employer = models.CharField(max_length=200)
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
+    # ins
+    pi_insurance_cover = models.FloatField(default=0.0, verbose_name='Annual cover')
+    pi_renewal_date = models.DateField(null=True, blank=True, verbose_name='Renewal date')
+    pi_company = models.CharField(max_length=100, blank=True, verbose_name='Insurance company')
+    build_std_know = models.TextField(blank=True, verbose_name='Details of knowledge of Scottish Building Standards system')
+    type_of_work = models.TextField(blank=True, verbose_name='Type of work undertaken')
+
+    def get_full_name(self):
+        full_name = self.get_title_display
+        if self.middle_name is not None and len(self.forename):
+            full_name = ' ' + self.forename
+        if self.middle_name is not None and len(self.middle_name):
+            full_name = full_name + ' ' + self.middle_name
+        if self.surname is not None and len(self.surname):
+            full_name = full_name + ' ' + self.surname
+
+        return full_name
+
+    def __str__(self):
+        return self.get_full_name()
 
 
 class Telephone(models.Model):

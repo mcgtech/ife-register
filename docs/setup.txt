@@ -1,3 +1,10 @@
+
+cd /Users/stephenmcgonigal/fire_django
+source fireenv/bin/activate
+
+python manage.py runserver
+
+
 cd /Users/stephenmcgonigal
 mkdir fire_django
 cd fire_django/
@@ -9,8 +16,6 @@ django-admin startproject ife_register .
 python manage.py startapp register
 python manage.py startapp common
 
-
-python manage.py runserver
 
 #sudo easy_install pymysql
 # install crispy-forms
@@ -38,7 +43,6 @@ ALTER ROLE ife_admin SET timezone TO 'Europe/London';
 
 GRANT ALL PRIVILEGES ON DATABASE ife_register TO ife_admin;
 \q
-
 
 python manage.py migrate
 python manage.py makemigrations common

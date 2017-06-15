@@ -29,18 +29,20 @@ def engineer_edit(request, pk):
 @transaction.atomic
 def manage_engineer(request, engineer_id=None):
     js_dict = {}
+    del_request = None
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')
     phone_helper = PhoneFormSetHelper()
     phone_form_set = get_phones_formset(config, engineer_id)
-    msg = 'You have successfully deleted the ' + config.class_name + ' ' + str(config.primary_entity)
 
     if engineer_id is None:
         address = Address()
     else:
         address = config.primary_entity.address
 
-    del_request = handle_delete_request(request, config, '/engineer_search', msg)
-    if del_request:
+    if engineer_id is not None:
+        del_msg = 'You have successfully deleted the ' + config.class_name + ' ' + str(config.primary_entity)
+        del_request = handle_delete_request(request, config, '/engineer_search', del_msg)
+    if del_request is not None:
         return del_request
     elif request.method == "POST":
         primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form, cancel_url=config.cancel_url)

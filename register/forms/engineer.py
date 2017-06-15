@@ -29,9 +29,10 @@ class EngineerForm(EditForm, AuditableForm):
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')
         self.prepare_required_field('employer', 'Employer')
-        widgets = {
-            'build_std_know': forms.TextInput(attrs={'placeholder': 'Name'}),
-            'type_of_work': forms.Textarea(attrs={'placeholder': 'Enter description here'}),}
+        class Meta(AuditableForm.Meta):
+            model = Engineer
+            AuditableForm.Meta.widgets['build_std_know'] = forms.Textarea(attrs={'placeholder': 'Name'})
+            AuditableForm.Meta.widgets['type_of_work'] = forms.Textarea(attrs={'placeholder': 'Enter description here'})
 
     # if I make the following field required in the model, then as I am using tabs, the default form validation for
     # required fields in crispy forms for bootstrap shows a popover against the offending field when save is clicked

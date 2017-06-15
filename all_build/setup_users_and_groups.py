@@ -17,6 +17,11 @@ engineers_group.save()
 # member of institute of fire engineers they decide if engineer is okay to be on register
 approver_group = Group(name="approver")
 approver_group.save()
+steve = User.objects.create_user(username='steve', email="mcgonigalstephen@gmail.co.uk",  password="new3lifeok")
+steve.is_staff=True
+steve.save()
+approver_group.user_set.add(steve)
+approver_group.save()
 # they will search for engineer on the site to see if they can be allowed to do some work
 approver_group = Group(name="verifier")
 approver_group.save()

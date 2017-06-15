@@ -40,12 +40,12 @@ class Engineer(Auditable):
     middle_name = models.CharField(max_length=100, blank=True)
     forename = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    employer = models.CharField(max_length=200, blank=True)
+    employer = models.CharField(max_length=200, blank=True, verbose_name='Current employer')
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
     pi_insurance_cover = models.FloatField(null=True, default=0.0, verbose_name='Annual cover')
     pi_renewal_date = models.DateField(null=True, blank=True, verbose_name='Renewal date')
-    pi_company = models.CharField(max_length=100, blank=True, verbose_name='Insurance company')
+    pi_company = models.TextField(blank=True, verbose_name='Insurance company details')
     # experience
     build_std_know = models.TextField(blank=True, verbose_name='Knowledge of Scottish Building Standards system')
     type_of_work = models.TextField(blank=True, verbose_name='Type of work undertaken')

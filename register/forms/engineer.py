@@ -9,15 +9,27 @@ from common.forms import *
 class EngineerForm(EditForm, AuditableForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        con_dets_help = '<p>Please let us know how we can contact you.</p>'
+        con_dets_help += '<p>When you are done here work through the other tabs to finish your application.</p>'
+        con_dets_help += '<p>Click submit when you are done.</p>'
+        con_dets_help = get_help_markup(con_dets_help)
+        exp_help = '<p>Tell us little about your experience before moving on to the next tab.</p>'
+        exp_help += '<p>You can go back and change details on any tab at any point before you submit your application, but we would appreciate it if you can fill in as much information as possible.</p>'
+        exp_help = get_help_markup(exp_help)
+        int_help = '<p>Enter details of all relevant professional bodies that you are an active member of.</p>'
+        int_help = get_help_markup(int_help)
+        pi_help = '<p>Okay nearly there, let us know the details if you have current Professional Indemnity (PI) insurance.</p>'
+        pi_help += '<p>Once you are done simply click Submit and then we will be in touch.</p>'
+        pi_help = get_help_markup(pi_help)
         self.helper.layout = Layout(
                 TabHolder(
                     Tab('About You',
+                        HTML(con_dets_help),
                         Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
-                    Tab('Professional Indemnity', PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', 'pi_company',
-                        ),
-                    Tab('Experience', 'build_std_know', 'type_of_work',
+                    Tab('Experience', HTML(exp_help), 'employer', 'build_std_know', 'type_of_work',
                         ),
                     Tab('Institution Membership',
+                        HTML(int_help),
                         Div(
                             Div(Fieldset('IFE', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date', css_class="ife"), css_class="col-sm-6"),
                             Div(Fieldset('Engineering Council', 'ec_member_grade', 'ec_member_no', 'ec_member_reg_date',css_class="ec"), css_class="col-sm-6")
@@ -26,6 +38,11 @@ class EngineerForm(EditForm, AuditableForm):
                             Div(Fieldset('Other Institution', 'other_inst', 'other_inst_no', 'other_inst_reg_date', css_class="oi"), css_class="col-sm-6"),
                             Div(Fieldset('Additional Information', 'add_mem', 'cpd', css_class="ai"), css_class="col-sm-6") ,
                         )),
+                    Tab('Professional Indemnity', HTML(pi_help),
+                        Div(
+                            Div(PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', css_class="col-sm-6"),
+                            Div('pi_company', css_class="col-sm-6")),
+                        ),
                     Tab(
                         'Log',
                         'created_by',
@@ -37,7 +54,7 @@ class EngineerForm(EditForm, AuditableForm):
         self.prepare_required_field('title', 'Title')
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')
-        self.prepare_required_field('employer', 'Employer')
+        self.fields['pi_insurance_cover'].required = False
 
     # if I make the following field required in the model, then as I am using tabs, the default form validation for
     # required fields in crispy forms for bootstrap shows a popover against the offending field when save is clicked
@@ -52,9 +69,6 @@ class EngineerForm(EditForm, AuditableForm):
     def clean_surname(self):
         return validate_required_field(self, 'surname', 'surname')
 
-    def clean_employer(self):
-        return validate_required_field(self, 'employer', 'employer')
-
     class Meta(AuditableForm.Meta):
         model = Engineer
         fields = get_auditable_fields() + ('title', 'forename', 'middle_name', 'surname', 'employer',
@@ -64,15 +78,17 @@ class EngineerForm(EditForm, AuditableForm):
                                            'ec_member_grade', 'ec_member_no', 'ec_member_reg_date',
                                            'other_inst', 'other_inst_no', 'other_inst_reg_date',
                                            'add_mem', 'cpd')
-        AuditableForm.Meta.widgets['build_std_know'] = forms.Textarea(attrs={'placeholder': 'Enter details of your current knowledge of the Scottish Building Standards system.'})
-        AuditableForm.Meta.widgets['type_of_work'] = forms.Textarea(attrs={'placeholder': 'e.g. fire engineering design, Computational Fluid Dynamics (CFD), fire engineering regulator, structural fire engineering, smoke control specialist etc.'})
-        AuditableForm.Meta.widgets['add_mem'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant professional bodies that you are a member of.'})
-        AuditableForm.Meta.widgets['other_inst'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant institutions that you are a member of.'})
-        AuditableForm.Meta.widgets['cpd'] = forms.Textarea(attrs={'placeholder': 'Continuing professional development (CPD) is a way for you to show that you are committed to learning and developing throughout your career. Please detail your CPD for the past year and your plans for the year ahead.'})
+        AuditableForm.Meta.widgets['build_std_know'] = forms.Textarea(attrs={'placeholder': 'Enter details of your current knowledge of the Scottish Building Standards system'})
+        AuditableForm.Meta.widgets['employer'] = forms.TextInput(attrs={'placeholder': 'Current employers name'})
+        AuditableForm.Meta.widgets['type_of_work'] = forms.Textarea(attrs={'placeholder': 'e.g. fire engineering design, Computational Fluid Dynamics (CFD), fire engineering regulator, structural fire engineering, smoke control specialist etc'})
+        AuditableForm.Meta.widgets['add_mem'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant professional bodies that you are a member of'})
+        AuditableForm.Meta.widgets['other_inst'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant institutions that you are a member of'})
+        AuditableForm.Meta.widgets['cpd'] = forms.Textarea(attrs={'placeholder': 'Continuing professional development (CPD) is a way for you to show that you are committed to learning and developing throughout your career. Please detail your CPD for the past year and your plans for the year ahead'})
         AuditableForm.Meta.widgets['pi_renewal_date'] = forms.DateInput(attrs={'class':'datepicker'})
         AuditableForm.Meta.widgets['ife_member_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
         AuditableForm.Meta.widgets['ec_member_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
         AuditableForm.Meta.widgets['other_inst_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
+        AuditableForm.Meta.widgets['pi_company'] = forms.Textarea(attrs={'rows':4})
 
 
 
@@ -128,3 +144,10 @@ class PhoneFormSetHelper(FormHelper):
         self.helper = FormHelper()
         self.form_tag = False
         self.template = 'bootstrap3/table_inline_formset.html'
+
+def get_help_markup(text):
+    markup = '<div class ="alert alert-info alert-dismissible" role="alert">'
+    markup += text
+    markup += '</div>'
+
+    return markup

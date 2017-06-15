@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email', 'username')
 
 # had to use helper as shown in https://blog.bixly.com/awesome-forms-django-crispy-forms
 # otherwise tabs doesn't work
@@ -34,7 +34,7 @@ class EngineerForm(EditForm, AuditableForm):
                     Tab('1. About You',
                         HTML(con_dets_help),
                         # Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
-                        Div(Div('title', 'middle_name', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
+                        Div(Div('title', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
                     Tab('2. Experience', HTML(exp_help), 'employer', 'build_std_know', 'type_of_work',
                         ),
                     Tab('3. Institution Membership',
@@ -82,8 +82,7 @@ class EngineerForm(EditForm, AuditableForm):
     class Meta(AuditableForm.Meta):
         model = Engineer
         fields = get_auditable_fields() + ('title',
-                                           # 'forename', 'surname',
-                                           'middle_name', 'employer',
+                                           'employer',
                                            'pi_insurance_cover', 'pi_renewal_date', 'pi_company',
                                            'build_std_know', 'type_of_work',
                                            'ife_member_grade', 'ife_member_no', 'ife_member_reg_date',

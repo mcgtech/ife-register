@@ -14,11 +14,12 @@ function handle_log_visibility()
 
 function setup_contact_details()
 {
+    $('#user').insertAfter('#div_id_engineer-title');
     $('#address').appendTo('.address');
     var phones_elem = $('#phones');
     phones_elem.appendTo('.name_con');
     setup_phone_formsets();
-    phones_elem.prepend('<label for="id_main-middle_name" class="control-label ">Telephone</label>');
+    $('<label class="control-label ">Telephone</label>').insertBefore($('table', phones_elem));
 }
 
 function setup_phone_formsets()

@@ -44,9 +44,6 @@ class Engineer(Auditable):
     # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.IntegerField( null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
-    middle_name = models.CharField(max_length=100, blank=True)
-    # forename = models.CharField(max_length=100)
-    # surname = models.CharField(max_length=100)
     employer = models.CharField(max_length=200, blank=True, verbose_name='Current employer')
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
@@ -109,8 +106,6 @@ class Engineer(Auditable):
         full_name = self.get_title_display if self.title is not None else ''
         if self.user.first_name is not None and len(self.user.first_name) > 0:
             full_name = ' ' + self.user.first_name
-        if self.middle_name is not None and len(self.middle_name):
-            full_name = full_name + ' ' + self.middle_name
         if self.user.last_name is not None and len(self.user.last_name):
             full_name = full_name + ' ' + self.user.last_name
 

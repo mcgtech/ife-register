@@ -31,10 +31,7 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
         action = get_form_add_url(parent_id, class_name)
     else:
         action = get_form_edit_url(parent_id, primary_id, class_name)
-
-    if anonymous_user(request.user):
-        cancel_url = '/'
-    elif request.method == "POST":
+    if request.method == "POST":
         cancel_url = None
     else:
         if parent_id is not None:
@@ -42,7 +39,7 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
         else:
             cancel_url = redirect(cancel_redirect_name).url
     save_text = ''
-    if anonymous_user(request.user):
+    if engineer_user(request.user) and primary_entity.title is None:
         save_text = 'Submit Application'
     elif engineer_user(request.user):
         save_text = 'Submit Changes'

@@ -18,18 +18,27 @@ def engineer_application(request):
 
 
 @login_required
-@user_passes_test(admin_user, 'ife_register_login')
+@user_passes_test(approver_user, 'ife_register_login')
 def engineer_new(request):
     return manage_engineer(request, None, False)
 
 
 @login_required
-@user_passes_test(admin_user, 'ife_register_login')
+# TODO: ensure engineer can only edit thier own but approver can edit any
+@user_passes_test(approver_user, 'ife_register_login')
 def engineer_edit(request, pk):
     return manage_engineer(request, pk, False)
 
 def show_log(request):
     return request is None or (anonymous_user(request.user) == False and engineer_user(request.user) == False)
+
+def get_user_for_engineer_form(request, engineer_id):
+    if approver_user(request.user):
+        target_user = Engineer.objects.get(pk=engineer_id).user
+    else:
+        target_user = request.user
+    return target_user
+
 
 # http://stackoverflow.com/questions/29758558/inlineformset-factory-create-new-objects-and-edit-objects-after-created
 # https://gist.github.com/ibarovic/3092910
@@ -40,6 +49,7 @@ def manage_engineer(request, engineer_id=None, registration=False):
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')
     phone_helper = PhoneFormSetHelper()
     phone_form_set = get_phones_formset(config, engineer_id)
+    target_user = get_user_for_engineer_form(request, engineer_id)
 
     if engineer_id is None:
         address = Address()
@@ -52,8 +62,8 @@ def manage_engineer(request, engineer_id=None, registration=False):
     if del_request is not None:
         return del_request
     elif request.method == "POST":
-        user_form = UserForm(request.POST, instance=request.user)
-        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=request.user.engineer, prefix=config.class_name,
+        user_form = UserForm(request.POST, instance=target_user)
+        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
                                            is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
         # primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
         #                                    is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
@@ -72,7 +82,7 @@ def manage_engineer(request, engineer_id=None, registration=False):
             return redirect(action)
     else:
         address_form = AddressForm(instance=address, prefix="address")
-        user_form = UserForm(instance=request.user)
+        user_form = UserForm(instance=target_user)
         primary_entity_form = EngineerForm(instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form,
                                            cancel_url=config.cancel_url, save_text=config.save_text)
 

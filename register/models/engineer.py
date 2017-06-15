@@ -46,8 +46,57 @@ class Engineer(Auditable):
     pi_insurance_cover = models.FloatField(default=0.0, verbose_name='Annual cover')
     pi_renewal_date = models.DateField(null=True, blank=True, verbose_name='Renewal date')
     pi_company = models.CharField(max_length=100, blank=True, verbose_name='Insurance company')
-    build_std_know = models.TextField(blank=True, verbose_name='Details of knowledge of Scottish Building Standards system')
+    # experience
+    build_std_know = models.TextField(blank=True, verbose_name='Knowledge of Scottish Building Standards system')
     type_of_work = models.TextField(blank=True, verbose_name='Type of work undertaken')
+    # official body
+    # IFE
+    IFE_TECH = 0
+    IFE_GRAD = 1
+    IFE_ASSOC = 2
+    IFE_MEM = 3
+    IFE_FELL = 4
+    IFE_GRADES = (
+        (None, 'Please select'),
+        (IFE_TECH, 'Technician (TIFireE)'),
+        (IFE_GRAD, 'Graduate (GIFireE)'),
+        (IFE_ASSOC, 'Associate (AIFireE)'),
+        (IFE_MEM, 'Member (MIFireE)'),
+        (IFE_FELL, 'Fellow (FIFireE)'),
+    )
+    ife_member_grade = models.IntegerField(choices=IFE_GRADES, default=None, verbose_name='membership grade')
+    ife_member_no = models.CharField(max_length=100, blank=True, verbose_name='membership number')
+    ife_member_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
+    # Engineering Council
+    # IFE
+    EC_AFF = 0
+    EC_STUD = 1
+    EC_GRAD = 2
+    EC_LIC = 3
+    EC_ASSOC = 4
+    EC_MEM = 4
+    EC_FELL = 4
+    ENG_COUN_GRADES = (
+        (None, 'Please select'),
+        (EC_AFF, 'Affiliate'),
+        (EC_STUD, 'Student'),
+        (EC_GRAD, 'Graduate'),
+        (EC_LIC, 'Licentate'),
+        (EC_ASSOC, 'Associate'),
+        (EC_MEM, 'Member'),
+        (EC_FELL, 'Fellow'),
+    )
+    ec_member_grade = models.IntegerField(choices=ENG_COUN_GRADES, default=None, verbose_name='council grade')
+    ec_member_no = models.CharField(max_length=100, verbose_name='council number')
+    ec_member_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
+    # other
+    other_inst = models.TextField(blank=True, verbose_name='other institutions')
+    other_inst_no = models.CharField(max_length=100, verbose_name='membership number')
+    other_inst_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
+    # add mem
+    add_mem = models.TextField(blank=True, verbose_name='Additional memberships')
+    # cpd
+    cpd = models.TextField(blank=True, verbose_name='Continual Professional Development')
 
     def get_full_name(self):
         full_name = self.get_title_display

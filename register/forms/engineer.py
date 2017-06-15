@@ -17,6 +17,13 @@ class EngineerForm(EditForm, AuditableForm):
                         ),
                     Tab('Experience', 'build_std_know', 'type_of_work',
                         ),
+                    Tab('Institution Membership',
+                        Fieldset('IFE', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date', css_class="con_field"),
+                        Fieldset('Engineering Council', 'ec_member_grade', 'ec_member_no', 'ec_member_reg_date', css_class="con_field"),
+                        Fieldset('Other Institution', 'other_inst', 'other_inst_no', 'other_inst_reg_date', css_class="con_field"),
+                        'add_mem',
+                        'cpd',
+                        ),
                     Tab(
                         'Log',
                         'created_by',
@@ -29,10 +36,6 @@ class EngineerForm(EditForm, AuditableForm):
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')
         self.prepare_required_field('employer', 'Employer')
-        class Meta(AuditableForm.Meta):
-            model = Engineer
-            AuditableForm.Meta.widgets['build_std_know'] = forms.Textarea(attrs={'placeholder': 'Name'})
-            AuditableForm.Meta.widgets['type_of_work'] = forms.Textarea(attrs={'placeholder': 'Enter description here'})
 
     # if I make the following field required in the model, then as I am using tabs, the default form validation for
     # required fields in crispy forms for bootstrap shows a popover against the offending field when save is clicked
@@ -54,7 +57,20 @@ class EngineerForm(EditForm, AuditableForm):
         model = Engineer
         fields = get_auditable_fields() + ('title', 'forename', 'middle_name', 'surname', 'employer',
                                            'pi_insurance_cover', 'pi_renewal_date', 'pi_company',
-                                           'build_std_know', 'type_of_work')
+                                           'build_std_know', 'type_of_work',
+                                           'ife_member_grade', 'ife_member_no', 'ife_member_reg_date',
+                                           'ec_member_grade', 'ec_member_no', 'ec_member_reg_date',
+                                           'other_inst', 'other_inst_no', 'other_inst_reg_date',
+                                           'add_mem', 'cpd')
+        AuditableForm.Meta.widgets['build_std_know'] = forms.Textarea(attrs={'placeholder': 'Enter details of your current knowledge of the Scottish Building Standards system.'})
+        AuditableForm.Meta.widgets['type_of_work'] = forms.Textarea(attrs={'placeholder': 'e.g. fire engineering design, Computational Fluid Dynamics (CFD), fire engineering regulator, structural fire engineering, smoke control specialist etc.'})
+        AuditableForm.Meta.widgets['add_mem'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant professional bodies that you are a member of.'})
+        AuditableForm.Meta.widgets['other_inst'] = forms.Textarea(attrs={'placeholder': 'Please tell us about an other relevant institutions that you are a member of.'})
+        AuditableForm.Meta.widgets['cpd'] = forms.Textarea(attrs={'placeholder': 'Continuing professional development (CPD) is a way for you to show that you are committed to learning and developing throughout your career. Please detail your CPD for the past year and your plans for the year ahead.'})
+        AuditableForm.Meta.widgets['pi_renewal_date'] = forms.DateInput(attrs={'class':'datepicker'})
+        AuditableForm.Meta.widgets['ife_member_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
+        AuditableForm.Meta.widgets['ec_member_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
+        AuditableForm.Meta.widgets['other_inst_reg_date'] = forms.DateInput(attrs={'class':'datepicker'})
 
 
 

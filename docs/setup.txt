@@ -22,6 +22,10 @@ python manage.py startapp common
 pip install --upgrade django-crispy-forms
 # install: django-settings-export https://github.com/jakubroztocil/django-settings-export
 pip install django-settings-export
+pip install django-tables2
+pip install django-filter
+pip install django-widget-tweaks
+pip install django-bootstrap-pagination
 # https://github.com/brack3t/django-braces & http://django-braces.readthedocs.io/en/v1.4.0/access.html#loginrequiredmixin
 pip install django-braces
 # https://django-constance.readthedocs.io/en/latest/
@@ -56,3 +60,16 @@ python manage.py migrate register
 python manage.py shell < all_build/setup_users_and_groups.py
 
 git: https://github.com/mcgtech/ife-register.git
+
+install on new laptop:
+
+
+cd /Users/stephenmcgonigal
+git clone https://github.com/mcgtech/ife-register.git fire_django
+cd fire_django/
+python3 -m venv fire_env
+source fire_env/bin/activate
+pip install --upgrade pip
+pip install Django==1.11.2
+
+then rest f install

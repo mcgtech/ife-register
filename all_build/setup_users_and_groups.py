@@ -4,8 +4,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 
 # dont check this line in!!
-admin = User.objects.get(pk=1)
-if admin is None:
+try:
+    admin = User.objects.get(pk=1)
+except:
     admin = User.objects.create_superuser('admin', 'a@a.com', 'xxx')
 
 admin_group = Group(name="admin")

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from common.views.authentication import engineer_user
+from django.contrib.auth.models import Group
 
 # see https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html
 # to see how I attach associate person with address
@@ -125,11 +126,16 @@ def my_receiver(**kwargs):
     sender_model = kwargs['sender']
     instance = kwargs['sender']
     sender_model_name = sender_model.__name__
-    engineer_group_pk = 1
-    if action == 'post_add' and sender_model_name == 'User_groups' and engineer_group_pk in pk_set:
-        # if the user (instance) does not have an engineer object then add one
-        if instance.engineer is None:
-            Engineer.objects.create(user=instance)
+    if action == 'post_add' and sender_model_name == 'User_groups':
+        engineer_group = Group.objects.get(name='engineer')
+        engineer_group_pk = engineer_group.pk
+        if engineer_group_pk in pk_set:
+            print('a')
+            # if the user (instance) does not have an engineer object then add one
+            if instance.engineer is None:
+                print('b')
+                Engineer.objects.create(user=instance)
+                print('c')
 
 # @receiver(post_save, sender=User)
 # def create_user_engineer(sender, instance, created, **kwargs):

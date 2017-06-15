@@ -43,7 +43,7 @@ class Engineer(Auditable):
     )
     # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    title = models.IntegerField(choices=TITLES, default=None)
+    title = models.IntegerField( null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
     middle_name = models.CharField(max_length=100, blank=True)
     # forename = models.CharField(max_length=100)
     # surname = models.CharField(max_length=100)
@@ -106,43 +106,38 @@ class Engineer(Auditable):
     cpd = models.TextField(blank=True, verbose_name='Continual Professional Development')
 
     def get_full_name(self):
-        full_name = self.get_title_display
-        # if self.middle_name is not None and len(self.forename):
-        #     full_name = ' ' + self.forename
-        # if self.middle_name is not None and len(self.middle_name):
-        #     full_name = full_name + ' ' + self.middle_name
-        # if self.surname is not None and len(self.surname):
-        #     full_name = full_name + ' ' + self.surname
+        full_name = self.get_title_display if self.title is not None else ''
+        if self.user.first_name is not None and len(self.user.first_name) > 0:
+            full_name = ' ' + self.user.first_name
+        if self.middle_name is not None and len(self.middle_name):
+            full_name = full_name + ' ' + self.middle_name
+        if self.user.last_name is not None and len(self.user.last_name):
+            full_name = full_name + ' ' + self.user.last_name
 
         return full_name
 
     def __str__(self):
         return self.get_full_name()
 
+# https://simpleisbetterthancomplex.com/tutorial/2016/06/27/how-to-use-djangos-built-in-login-system.html
 @receiver(m2m_changed)
 def my_receiver(**kwargs):
     action = kwargs['action']
     pk_set = kwargs['pk_set']
     sender_model = kwargs['sender']
-    instance = kwargs['sender']
+    instance = kwargs['instance']
     sender_model_name = sender_model.__name__
     if action == 'post_add' and sender_model_name == 'User_groups':
         engineer_group = Group.objects.get(name='engineer')
         engineer_group_pk = engineer_group.pk
+        print(kwargs)
         if engineer_group_pk in pk_set:
-            print('a')
-            # if the user (instance) does not have an engineer object then add one
-            if instance.engineer is None:
-                print('b')
+            try:
+                Engineer.object.get(user=instance)
+            except:
+                # if the user (instance) does not have an engineer object then add one
                 Engineer.objects.create(user=instance)
-                print('c')
 
-# @receiver(post_save, sender=User)
-# def create_user_engineer(sender, instance, created, **kwargs):
-#     if created:
-#         if engineer_user(instance, True):
-#             Engineer.objects.create(user=instance)
-#
 # @receiver(post_save, sender=User)
 # def save_user_engineer(sender, instance, **kwargs):
 #     if engineer_user(instance, True):

@@ -11,7 +11,7 @@ def home_page(request):
     return render(request, 'home_page.html', {})
 
 # the following methods are used for views for entities that belong to a parent - eg interview
-EditConfig = namedtuple('EditConfig', 'primary_entity the_action_text is_edit_form action can_delete class_name cancel_url primary_id request parent_id')
+EditConfig = namedtuple('EditConfig', 'primary_entity the_action_text is_edit_form action can_delete class_name cancel_url primary_id request parent_id save_text')
 # primary_id is the id of the entity being editied
 def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_redirect_name):
     if primary_id is None:
@@ -39,7 +39,7 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
         else:
             cancel_url = redirect(cancel_redirect_name).url
 
-    return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id)
+    return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id, 'Submit Application')
 
 
 def get_form_add_url(parent_id, class_name):

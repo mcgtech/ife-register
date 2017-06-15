@@ -64,7 +64,7 @@ class Engineer(Auditable):
         (IFE_MEM, 'Member (MIFireE)'),
         (IFE_FELL, 'Fellow (FIFireE)'),
     )
-    ife_member_grade = models.IntegerField(choices=IFE_GRADES, default=None, verbose_name='membership grade')
+    ife_member_grade = models.IntegerField(null=True, choices=IFE_GRADES, default=None, verbose_name='membership grade')
     ife_member_no = models.CharField(max_length=100, blank=True, verbose_name='membership number')
     ife_member_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
     # Engineering Council
@@ -86,7 +86,7 @@ class Engineer(Auditable):
         (EC_MEM, 'Member'),
         (EC_FELL, 'Fellow'),
     )
-    ec_member_grade = models.IntegerField(choices=ENG_COUN_GRADES, default=None, verbose_name='council grade')
+    ec_member_grade = models.IntegerField(null=True, choices=ENG_COUN_GRADES, default=None, verbose_name='council grade')
     ec_member_no = models.CharField(max_length=100, blank=True, verbose_name='council number')
     ec_member_reg_date = models.DateField(null=True, blank=True, verbose_name='registration date')
     # other

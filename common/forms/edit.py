@@ -13,10 +13,14 @@ class EditForm(forms.ModelForm):
             cancel_url = kwargs.pop('cancel_url')
         except KeyError:
             cancel_url = None
+        try:
+            save_text = kwargs.pop('save_text')
+        except KeyError:
+            save_text = 'Save'
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.helper.add_input(Submit("save record", "Save", css_class='save_butt main-butt'))
+        self.helper.add_input(Submit("save record", save_text, css_class='save_butt main-butt'))
         if is_edit_form:
             self.helper.add_input(Submit("delete record", "Delete", css_class='btn btn-danger delete-btn  main-butt'))
         else:

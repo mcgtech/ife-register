@@ -23,12 +23,12 @@ class EngineerForm(EditForm, AuditableForm):
         pi_help = get_help_markup(pi_help)
         self.helper.layout = Layout(
                 TabHolder(
-                    Tab('About You',
+                    Tab('1. About You',
                         HTML(con_dets_help),
                         Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
-                    Tab('Experience', HTML(exp_help), 'employer', 'build_std_know', 'type_of_work',
+                    Tab('2. Experience', HTML(exp_help), 'employer', 'build_std_know', 'type_of_work',
                         ),
-                    Tab('Institution Membership',
+                    Tab('3. Institution Membership',
                         HTML(int_help),
                         Div(
                             Div(Fieldset('IFE', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date', css_class="ife"), css_class="col-sm-6"),
@@ -38,7 +38,7 @@ class EngineerForm(EditForm, AuditableForm):
                             Div(Fieldset('Other Institution', 'other_inst', 'other_inst_no', 'other_inst_reg_date', css_class="oi"), css_class="col-sm-6"),
                             Div(Fieldset('Additional Information', 'add_mem', 'cpd', css_class="ai"), css_class="col-sm-6") ,
                         )),
-                    Tab('Professional Indemnity', HTML(pi_help),
+                    Tab('4. Professional Indemnity', HTML(pi_help),
                         Div(
                             Div(PrependedText('pi_insurance_cover', '£'), 'pi_renewal_date', css_class="col-sm-6"),
                             Div('pi_company', css_class="col-sm-6")),
@@ -55,6 +55,8 @@ class EngineerForm(EditForm, AuditableForm):
         self.prepare_required_field('forename', 'Forename')
         self.prepare_required_field('surname', 'Surname')
         self.fields['pi_insurance_cover'].required = False
+        self.fields['ife_member_grade'].required = False
+        self.fields['ec_member_grade'].required = False
 
     # if I make the following field required in the model, then as I am using tabs, the default form validation for
     # required fields in crispy forms for bootstrap shows a popover against the offending field when save is clicked

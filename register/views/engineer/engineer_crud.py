@@ -45,7 +45,8 @@ def manage_engineer(request, engineer_id=None):
     if del_request is not None:
         return del_request
     elif request.method == "POST":
-        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form, cancel_url=config.cancel_url)
+        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
+                                           is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
         address_form = AddressForm(request.POST, request.FILES, instance=address, prefix="address")
         if primary_entity_form.is_valid() and address_form.is_valid() and phone_form_set.is_valid():
             address = address_form.save()
@@ -60,7 +61,8 @@ def manage_engineer(request, engineer_id=None):
             return redirect(action)
     else:
         address_form = AddressForm(instance=address, prefix="address")
-        primary_entity_form = EngineerForm(instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form, cancel_url=config.cancel_url)
+        primary_entity_form = EngineerForm(instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form,
+                                           cancel_url=config.cancel_url, save_text=config.save_text)
 
     if engineer_id is None:
         add_msg = 'Adding a new ' + config.class_name

@@ -1,6 +1,10 @@
 from django.db import models
 from common.models import Auditable
 from django_countries.fields import CountryField
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save, m2m_changed
+from django.dispatch import receiver
+from common.views.authentication import engineer_user
 
 # see https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html
 # to see how I attach associate person with address
@@ -36,10 +40,12 @@ class Engineer(Auditable):
         (MISS, 'Miss'),
         (MS, 'Ms'),
     )
+    # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.IntegerField(choices=TITLES, default=None)
     middle_name = models.CharField(max_length=100, blank=True)
-    forename = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
+    # forename = models.CharField(max_length=100)
+    # surname = models.CharField(max_length=100)
     employer = models.CharField(max_length=200, blank=True, verbose_name='Current employer')
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
@@ -100,18 +106,41 @@ class Engineer(Auditable):
 
     def get_full_name(self):
         full_name = self.get_title_display
-        if self.middle_name is not None and len(self.forename):
-            full_name = ' ' + self.forename
-        if self.middle_name is not None and len(self.middle_name):
-            full_name = full_name + ' ' + self.middle_name
-        if self.surname is not None and len(self.surname):
-            full_name = full_name + ' ' + self.surname
+        # if self.middle_name is not None and len(self.forename):
+        #     full_name = ' ' + self.forename
+        # if self.middle_name is not None and len(self.middle_name):
+        #     full_name = full_name + ' ' + self.middle_name
+        # if self.surname is not None and len(self.surname):
+        #     full_name = full_name + ' ' + self.surname
 
         return full_name
 
     def __str__(self):
         return self.get_full_name()
 
+@receiver(m2m_changed)
+def my_receiver(**kwargs):
+    action = kwargs['action']
+    pk_set = kwargs['pk_set']
+    sender_model = kwargs['sender']
+    instance = kwargs['sender']
+    sender_model_name = sender_model.__name__
+    engineer_group_pk = 1
+    if action == 'post_add' and sender_model_name == 'User_groups' and engineer_group_pk in pk_set:
+        # if the user (instance) does not have an engineer object then add one
+        if instance.engineer is None:
+            Engineer.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def create_user_engineer(sender, instance, created, **kwargs):
+#     if created:
+#         if engineer_user(instance, True):
+#             Engineer.objects.create(user=instance)
+#
+# @receiver(post_save, sender=User)
+# def save_user_engineer(sender, instance, **kwargs):
+#     if engineer_user(instance, True):
+#         instance.engineer.save()
 
 class Telephone(models.Model):
     HOME = 0

@@ -6,7 +6,7 @@ from django.db import transaction
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from common.views import get_form_edit_config, get_form_edit_url
-from register.forms import EngineerForm, AddressForm, PhoneFormSetHelper, PhoneForm
+from register.forms import EngineerForm, AddressForm, PhoneFormSetHelper, PhoneForm, UserForm
 from common.views import *
 from collections import namedtuple
 from register.models import Engineer, Address, Telephone
@@ -52,14 +52,18 @@ def manage_engineer(request, engineer_id=None, registration=False):
     if del_request is not None:
         return del_request
     elif request.method == "POST":
-        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
+        user_form = UserForm(request.POST, instance=request.user)
+        primary_entity_form = EngineerForm(request.POST, request.FILES, instance=request.user.engineer, prefix=config.class_name,
                                            is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
+        # primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
+        #                                    is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
         address_form = AddressForm(request.POST, request.FILES, instance=address, prefix="address")
-        if primary_entity_form.is_valid() and address_form.is_valid() and phone_form_set.is_valid():
+        if user_form.is_valid() and primary_entity_form.is_valid() and address_form.is_valid() and phone_form_set.is_valid():
             address = address_form.save()
             created_primary_entity = primary_entity_form.save(commit=False)
             apply_auditable_info(created_primary_entity, request)
             created_primary_entity.address = address
+            user_form.save()
             created_primary_entity.save()
             phone_form_set = get_phones_formset(config, engineer_id)
             save_many_relationship(phone_form_set)
@@ -68,6 +72,7 @@ def manage_engineer(request, engineer_id=None, registration=False):
             return redirect(action)
     else:
         address_form = AddressForm(instance=address, prefix="address")
+        user_form = UserForm(instance=request.user)
         primary_entity_form = EngineerForm(instance=config.primary_entity, prefix=config.class_name, is_edit_form=config.is_edit_form,
                                            cancel_url=config.cancel_url, save_text=config.save_text)
 
@@ -83,11 +88,12 @@ def manage_engineer(request, engineer_id=None, registration=False):
     js_data = json.dumps(js_dict)
 
     return render(request, 'engineer/engineer_edit.html', {'form': primary_entity_form,
-                                                               'address_form': address_form,
-                                                               'phone_form_set': phone_form_set, 'phone_helper': phone_helper,
-                                                                  'js_data' : js_data,
-                                                                  'config' : config,
-                                                                  'form_errors': form_errors,})
+                                                           'user_form': user_form,
+                                                           'address_form': address_form,
+                                                           'phone_form_set': phone_form_set, 'phone_helper': phone_helper,
+                                                           'js_data' : js_data,
+                                                           'config' : config,
+                                                           'form_errors': form_errors,})
 
 def get_phones_formset(config, engineer_id):
     return get_formset(config, Engineer, Telephone, PhoneForm, "phones", Telephone.objects.filter(engineer_id=engineer_id))

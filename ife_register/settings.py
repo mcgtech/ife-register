@@ -176,17 +176,17 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 
 # groups
 ADMIN_GROUP = 'admin'
-APPLICANT_GROUP = 'applicant'
 ENGINEER_GROUP = 'engineer'
 APPROVER_GROUP = 'approver'
+VERIFIER_GROUP = 'verifier'
 
 # https://github.com/jakubroztocil/django-settings-export
 # allows us to access constants inside templates
 SETTINGS_EXPORT = [
     'ADMIN_GROUP',
-    'APPLICANT_GROUP',
     'ENGINEER_GROUP',
-    'APPROVER_GROUP'
+    'APPROVER_GROUP',
+    'VERIFIER_GROUP'
 ]
 # Message types
 INFO_MSG_TYPE = 0

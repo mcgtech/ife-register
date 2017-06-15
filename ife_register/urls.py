@@ -24,11 +24,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.home_page, name='home_page'),
     url(r'^accounts/login/$', login, {'template_name': 'login.html'}, name='ife_register_login'),
-    url(r'^accounts/logout/$', logout, {'next_page': reverse_lazy('engineer_search')}, name='ife_register_logout'),
+    url(r'^accounts/logout/$', logout, {'next_page': reverse_lazy('home_page')}, name='ife_register_logout'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'', include('register.urls')),
-    url(r'^$', views.home_page, name='home_page'),
 ]
 
 if settings.DEBUG:

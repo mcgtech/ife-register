@@ -4,6 +4,12 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Bu
 from crispy_forms.bootstrap import TabHolder, Tab, FormActions, InlineField, PrependedText
 from common.forms import *
 from common.views.authentication import *
+from django.contrib.auth.models import User
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
 
 # had to use helper as shown in https://blog.bixly.com/awesome-forms-django-crispy-forms
 # otherwise tabs doesn't work
@@ -27,7 +33,8 @@ class EngineerForm(EditForm, AuditableForm):
                 TabHolder(
                     Tab('1. About You',
                         HTML(con_dets_help),
-                        Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
+                        # Div(Div('title', 'forename', 'middle_name', 'surname', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
+                        Div(Div('title', 'middle_name', css_class="col-sm-6 name_con"), Div(css_class="col-sm-6 address")),),
                     Tab('2. Experience', HTML(exp_help), 'employer', 'build_std_know', 'type_of_work',
                         ),
                     Tab('3. Institution Membership',
@@ -53,8 +60,8 @@ class EngineerForm(EditForm, AuditableForm):
                         'modified_on'
                     ),))
         self.prepare_required_field('title', 'Title')
-        self.prepare_required_field('forename', 'Forename')
-        self.prepare_required_field('surname', 'Surname')
+        # self.prepare_required_field('forename', 'Forename')
+        # self.prepare_required_field('surname', 'Surname')
         self.fields['pi_insurance_cover'].required = False
         self.fields['ife_member_grade'].required = False
         self.fields['ec_member_grade'].required = False
@@ -66,15 +73,17 @@ class EngineerForm(EditForm, AuditableForm):
     def clean_title(self):
         return validate_required_field(self, 'title', 'title')
 
-    def clean_forename(self):
-        return validate_required_field(self, 'forename', 'forename')
-
-    def clean_surname(self):
-        return validate_required_field(self, 'surname', 'surname')
+    # def clean_forename(self):
+    #     return validate_required_field(self, 'forename', 'forename')
+    #
+    # def clean_surname(self):
+    #     return validate_required_field(self, 'surname', 'surname')
 
     class Meta(AuditableForm.Meta):
         model = Engineer
-        fields = get_auditable_fields() + ('title', 'forename', 'middle_name', 'surname', 'employer',
+        fields = get_auditable_fields() + ('title',
+                                           # 'forename', 'surname',
+                                           'middle_name', 'employer',
                                            'pi_insurance_cover', 'pi_renewal_date', 'pi_company',
                                            'build_std_know', 'type_of_work',
                                            'ife_member_grade', 'ife_member_no', 'ife_member_reg_date',

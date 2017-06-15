@@ -18,10 +18,10 @@
     <div class="well">
       <!--# if I change this then also change: /Users/stephenmcgonigal/django_projs/client/filters.py -->
       <div class="row">
-        <div class="form-group col-sm-3">
-          {{ filter.form.forename.label_tag }}
-          {% render_field filter.form.forename class="form-control" %}
-        </div>
+{#        <div class="form-group col-sm-3">#}
+{#          {{ filter.form.forename.label_tag }}#}
+{#          {% render_field filter.form.forename class="form-control" %}#}
+{#        </div>#}
       </div>
       {% include 'partials/filter_buttons.html' %}
       <button style="float:right;" type="button" onclick="javascript:window.location='{% url 'engineer_new' %}';" class="btn btn-success">

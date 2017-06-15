@@ -6,8 +6,12 @@ def admin_user(user):
 def approver_user(user):
     return admin_user(user) or user.groups.filter(name=settings.APPROVER_GROUP).exists()
 
-def engineer_user(user):
-    return admin_user(user) or user.groups.filter(name=settings.ENGINEER_GROUP).exists()
+def engineer_user(user, strict = False):
+    in_target_group = user.groups.filter(name=settings.ENGINEER_GROUP).exists()
+    if strict:
+        return in_target_group
+    else:
+        return admin_user(user) or in_target_group
 
 def anonymous_user(user):
     return user.is_anonymous()

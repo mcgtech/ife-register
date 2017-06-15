@@ -14,6 +14,6 @@ class EngineerTable(tables.Table):
     class Meta:
         model = Engineer
         # fields to display in table
-        fields = ('forename',)
+        fields = ('title',)
         attrs = {"class": "paleblue table table-striped table-hover table-bordered"}
         sequence = ('engineer_id', '...',)

@@ -103,6 +103,9 @@ class Engineer(Auditable):
     # cpd
     cpd = models.TextField(blank=True, verbose_name='Continual Professional Development')
 
+    class Meta:
+        ordering = ('-modified_on', )
+
     def get_full_name(self):
         full_name = self.get_title_display if self.title is not None else ''
         if self.user.first_name is not None and len(self.user.first_name) > 0:

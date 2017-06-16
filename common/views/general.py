@@ -152,7 +152,7 @@ def save_many_relationship(form_set, auditable = False, request = None, target =
                     form.save()
 
 EmailDetails = namedtuple('EmailDetails', 'html_body plain_body subject from_address to_addresses cc_addresses bcc_addresses')
-def send_email(details, request):
+def send_email(details, request, show_msg_sent = True):
     html_content = details.html_body
     plain_content = details.plain_body
     subject = details.subject
@@ -172,7 +172,8 @@ def send_email(details, request):
         )
         email.attach_alternative(html_content, "text/html")
         email.send(False)
-        msg_once_only(request, 'Email sent to ' + str(to_addresses), settings.SUCC_MSG_TYPE)
+        if show_msg_sent:
+            msg_once_only(request, 'Email sent to ' + str(to_addresses), settings.SUCC_MSG_TYPE)
     except Exception as e:
         msg_once_only(request, 'Failed to email ' + str(to_addresses) + ' as an exception occurred: ' + str(e), settings.ERR_MSG_TYPE)
 

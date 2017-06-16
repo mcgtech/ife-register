@@ -27,7 +27,7 @@ SECRET_KEY = '_3fccnu_of$+0+d^+6xna=)0+d5-m$a*2cqltgffc1=%c*ydbo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mcgtech.pythonanywhere.com']
+ALLOWED_HOSTS = ['mcgtech.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -55,11 +55,11 @@ CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG = {
     'GEN_FROM_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'General from address'),
-    'MODIFICATION_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'Who to inform of modifications'),
+    'APPROVER_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'Who to inform of modifications'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
-    'General Options': ('GEN_FROM_EMAIL_ADDRESS',),
+    'General Options': ('GEN_FROM_EMAIL_ADDRESS', 'APPROVER_EMAIL_ADDRESS',),
 }
 
 MIDDLEWARE = [

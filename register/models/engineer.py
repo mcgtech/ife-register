@@ -117,11 +117,31 @@ class Engineer(Auditable):
 
     def get_submission_date(self):
         sub_date = None
-        subs = self.engineer_status.filter(status=ApplicationStatus.SUB).order_by('-modified_on')
-        if subs is not None and len(subs) > 0:
-            latest_sub = subs.last()
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.SUB)
+        if latest_sub is not None:
             sub_date = latest_sub.created_on
         return sub_date
+
+    def get_sign_on_date(self):
+        sub_date = None
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.NY_SUB)
+        if latest_sub is not None:
+            sub_date = latest_sub.created_on
+        return sub_date
+
+    def get_approval_date(self):
+        sub_date = None
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.APP)
+        if latest_sub is not None:
+            sub_date = latest_sub.created_on
+        return sub_date
+
+    def get_latest_status_by_type(self, type):
+        latest = None
+        status_list = self.engineer_status.filter(status=type).order_by('-modified_on')
+        if status_list is not None and len(status_list) > 0:
+            latest = status_list.last()
+        return latest
 
     def get_ordered_status(self):
         return self.engineer_status.all().order_by('-modified_on')

@@ -27,3 +27,7 @@ def engineer_signup(request):
     else:
         form = EngineerSignUpForm()
     return render(request, 'engineer/engineer_signup.html', {'form': form})
+
+
+def engineer_welcome(request):
+    return render(request, 'engineer/engineer_welcome.html')

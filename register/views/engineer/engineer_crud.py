@@ -71,8 +71,6 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
         user_form = UserForm(request.POST, instance=target_user)
         primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
                                            is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
-        # primary_entity_form = EngineerForm(request.POST, request.FILES, instance=config.primary_entity, prefix=config.class_name,
-        #                                    is_edit_form=config.is_edit_form, cancel_url=config.cancel_url, save_text=config.save_text)
         address_form = AddressForm(request.POST, request.FILES, instance=address, prefix="address")
         if user_form.is_valid() and primary_entity_form.is_valid() and address_form.is_valid() and phone_form_set.is_valid():
             address = address_form.save()
@@ -133,7 +131,16 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
                                                            'form_errors': form_errors,})
 
 def handle_engineer_submitted(request, engineer):
-    return handle_engineer_state_change(request, engineer, ApplicationStatus.SUB, 'submitted')
+    # contact approver
+    body = 'Engineer ' + engineer.get_full_name() + ' has submitted their details'
+    from_add = config.GEN_FROM_EMAIL_ADDRESS
+    to_add = config.APPROVER_EMAIL_ADDRESS
+    cc = None
+    bcc = None
+    details = EmailDetails(body, body, 'Fire application submitted', from_add, to_add, cc, bcc)
+    send_email(details, request, False)
+
+    return handle_engineer_state_change(request, engineer, ApplicationStatus.SUB, 'submitted', False)
 
 def handle_engineer_approval(request, engineer):
     return handle_engineer_state_change(request, engineer, ApplicationStatus.APP, 'approved')
@@ -144,14 +151,14 @@ def handle_engineer_rejection(request, engineer):
 def handle_engineer_modifed_application(request, engineer):
     body = 'Engineer ' + engineer.get_full_name() + ' has modified their details'
     from_add = config.GEN_FROM_EMAIL_ADDRESS
-    to_add = config.MODIFICATION_EMAIL_ADDRESS
+    to_add = config.APPROVER_EMAIL_ADDRESS
     cc = None
     bcc = None
     details = EmailDetails(body, body, 'Fire application modification', from_add, to_add, cc, bcc)
-    send_email(details, request)
+    send_email(details, request, False)
 
 
-def handle_engineer_state_change(request, engineer, new_state, new_state_str):
+def handle_engineer_state_change(request, engineer, new_state, new_state_str, show_msg_sent = True):
     new_state = add_new_application_state(request, engineer, new_state)
     body = 'Dear ' + engineer.get_full_name()
     body += '<br>you application has been ' + new_state_str
@@ -160,7 +167,7 @@ def handle_engineer_state_change(request, engineer, new_state, new_state_str):
     cc = None
     bcc = None
     details = EmailDetails(body, body, 'Fire application ' + new_state_str, from_add, to_add, cc, bcc)
-    send_email(details, request)
+    send_email(details, request, show_msg_sent)
     msg_once_only(request, new_state_str.capitalize(), settings.SUCC_MSG_TYPE)
 
     return new_state

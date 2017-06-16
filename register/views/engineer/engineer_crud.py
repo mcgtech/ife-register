@@ -87,7 +87,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
                 handle_engineer_approval(request, config.primary_entity)
             elif request.POST.get("reject-app"):
                 handle_engineer_rejection(request, config.primary_entity)
-            elif user_is_engineer and application_has_been_submitted(config.primary_entity):
+            elif user_is_engineer and config.primary_entity.awaiting_approval():
                 handle_engineer_modifed_application(request, config.primary_entity)
             elif user_is_engineer:
                 handle_engineer_submitted(request, config.primary_entity)

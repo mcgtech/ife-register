@@ -48,19 +48,16 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
         else:
             cancel_url = redirect(cancel_redirect_name).url
     save_text = ''
-    if engineer_user(request.user) and application_has_been_submitted(primary_entity) == False:
-        save_text = 'Submit Your Application'
+    if engineer_user(request.user) and primary_entity.awaiting_approval():
+        save_text = 'Submit Your Changes'
+    elif engineer_user(request.user) and (primary_entity.rejected() or primary_entity.expired()):
+        save_text = 'Resubmit Your Application'
     elif engineer_user(request.user):
         save_text = 'Submit Your Changes'
     else:
         save_text = 'Save'
 
     return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id, save_text)
-
-def application_has_been_submitted(primary_entity):
-    latest_state = primary_entity.get_latest_status()
-    return latest_state.status != ApplicationStatus.NY_SUB
-
 
 def get_form_add_url(parent_id, class_name):
     url = '/' + class_name

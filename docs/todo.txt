@@ -6,3 +6,5 @@ emailing
 timed logout
 https
 backup rec strat
+on reject allow adding a reason
+verifier login

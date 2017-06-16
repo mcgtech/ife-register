@@ -126,6 +126,18 @@ class Engineer(Auditable):
     def get_latest_status(self):
         return self.get_ordered_status().first()
 
+    def awaiting_approval(self):
+        latest_state = self.get_latest_status()
+        return latest_state.status == ApplicationStatus.SUB
+
+    def rejected(self):
+        latest_state = self.get_latest_status()
+        return latest_state.status == ApplicationStatus.REJ
+
+    def expired(self):
+        latest_state = self.get_latest_status()
+        return latest_state.status == ApplicationStatus.EXP
+
     def __str__(self):
         return self.get_full_name()
 

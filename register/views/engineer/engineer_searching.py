@@ -7,7 +7,6 @@ from register.tables import EngineerTable
 from django_tables2 import SingleTableView
 
 
-
 # for code that does the filtering (using django-filter) see /Users/stephenmcgonigal/django_projs/client/filters.py
 # https://simpleisbetterthancomplex.com/tutorial/2016/11/28/how-to-filter-querysets-dynamically.html
 # https://simpleisbetterthancomplex.com/2015/12/04/package-of-the-week-django-widget-tweaks.html

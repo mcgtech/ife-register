@@ -27,7 +27,7 @@ SECRET_KEY = '_3fccnu_of$+0+d^+6xna=)0+d5-m$a*2cqltgffc1=%c*ydbo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mcgtech.pythonanywhere.com']
 
 
 # Application definition
@@ -97,18 +97,23 @@ WSGI_APPLICATION = 'ife_register.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-# postgres on digital oceans
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ife_register',
-        'USER': 'ife_admin',
-        'PASSWORD': 'saksjdsh8345$',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# # postgres on digital oceans
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ife_register',
+#         'USER': 'ife_admin',
+#         'PASSWORD': 'saksjdsh8345$',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

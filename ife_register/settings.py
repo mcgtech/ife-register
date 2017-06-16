@@ -158,7 +158,7 @@ STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'static'),)
 
 LOGIN_URL = 'ife_register_login'
 LOGOUT_URL = 'ife_register_logout'
-LOGIN_REDIRECT_URL = '/engineer_search'
+LOGIN_REDIRECT_URL = 'login_success'
 
 # https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
 MEDIA_URL = '/media/'

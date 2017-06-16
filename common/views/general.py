@@ -10,6 +10,13 @@ from common.views.authentication import *
 from django.core.mail import EmailMultiAlternatives
 from register.models import ApplicationStatus
 
+def login_success(request):
+    if engineer_user(request.user):
+        # user is an admin
+        return redirect("engineer_app_edit", user_pk=request.user.pk)
+    else:
+        return redirect("engineer_search")
+
 def home_page(request):
     return render(request, 'home_page.html', {})
 

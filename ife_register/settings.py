@@ -27,7 +27,7 @@ SECRET_KEY = '_3fccnu_of$+0+d^+6xna=)0+d5-m$a*2cqltgffc1=%c*ydbo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mcgtech.pythonanywhere.com']
 
 
 # Application definition

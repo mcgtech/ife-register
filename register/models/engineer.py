@@ -79,8 +79,8 @@ class Engineer(Auditable):
     EC_GRAD = 2
     EC_LIC = 3
     EC_ASSOC = 4
-    EC_MEM = 4
-    EC_FELL = 4
+    EC_MEM = 5
+    EC_FELL = 6
     ENG_COUN_GRADES = (
         (None, 'Please select'),
         (EC_AFF, 'Affiliate'),

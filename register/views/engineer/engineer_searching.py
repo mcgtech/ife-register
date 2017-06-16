@@ -21,5 +21,5 @@ class EngineerViewFilter(GroupRequiredMixin, FilterView, SingleTableView):
     template_name='engineer/engineer_search.html'
     # see /Users/stephenmcgonigal/django_projs/cmenv/lib/python3.5/site-packages/django_tables2/client.py
     # SingleTableMixin class (SingleTableView inherits from it)
-    table_pagination = {'per_page': 15}
+    table_pagination = {'per_page': 5}
     context_table_name = 'engineer_table'

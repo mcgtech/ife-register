@@ -11,7 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from register.models import ApplicationStatus
 
 def login_success(request):
-    if engineer_user(request.user):
+    if engineer_user(request.user, True):
         # user is an admin
         return redirect("engineer_app_edit", user_pk=request.user.pk)
     else:
@@ -176,3 +176,84 @@ def send_email(details, request):
     except Exception as e:
         msg_once_only(request, 'Failed to email ' + str(to_addresses) + ' as an exception occurred: ' + str(e), settings.ERR_MSG_TYPE)
 
+
+def add_test_user(first, last, emp, l1, l2, l3, pc, town, tit, max_state, ife_grade):
+    from django.contrib.auth.models import User
+    from register.models import Engineer, Address, ApplicationStatus, Telephone
+    from datetime import datetime
+    eng = Engineer()
+    username = first.lower() + '_' + last.lower()
+    try:
+        eng_user = User.objects.get(username=username)
+    except:
+        eng_user = User.objects.create_user(username, 'annlee@shirlie.co.uk', username + '123')
+    eng_user.first_name=first
+    eng_user.last_name=last
+    eng_user.email=username + '@gmail.com'
+    eng_user.save()
+    eng.user=eng_user
+
+    eng.title = tit
+    eng.employer = emp
+    address = Address()
+    address.line_1 = l1
+    address.line_2 = l2
+    address.line_3 = l3
+    address.post_town = town
+    address.post_code = pc
+    address.save()
+    eng.address = address
+    eng.pi_insurance_cover = 10000
+    eng.pi_renewal_date = '2018-6-2'
+    eng.pi_company = 'Robust Ins inc'
+    eng.build_std_know = 'I helped draft it.'
+    eng.type_of_work = 'I have been a regulator for 3 years.'
+    eng.ife_member_grade = ife_grade
+    eng.ife_member_no = 'AF458-997'
+    eng.ife_member_reg_date = '2009-4-3'
+    eng.ec_member_grade = 5
+    eng.ec_member_no = '435095890'
+    eng.ec_member_reg_date = '2011-9-21'
+    eng.cpd = 'I attend two training courses every year.'
+    eng.created_by = eng_user
+    eng.modified_by = eng_user
+    eng.created_on = datetime.now()
+    eng.modified_on = datetime.now()
+    eng.save()
+
+    tele=Telephone(type=0, number='01463 716099', engineer=eng)
+    tele.save()
+
+
+    state = ApplicationStatus(status=0, engineer=eng)
+    state.created_by = eng_user
+    state.modified_by = eng_user
+    state.created_on = datetime.now()
+    state.modified_on = datetime.now()
+    state.save()
+
+    if max_state > 0:
+        state = ApplicationStatus(status=1, engineer=eng)
+        state.created_by = eng_user
+        state.modified_by = eng_user
+        state.created_on = datetime.now()
+        state.modified_on = datetime.now()
+        state.save()
+
+    if max_state > 1:
+        state = ApplicationStatus(status=2, engineer=eng)
+        app_user = User.objects.get(username='approver')
+        state.created_by = app_user
+        state.modified_by = app_user
+        state.created_on = datetime.now()
+        state.modified_on = datetime.now()
+        state.save()
+
+    if max_state > 2:
+        state = ApplicationStatus(status=3, engineer=eng)
+        app_user = User.objects.get(username='approver')
+        state.created_by = app_user
+        state.modified_by = app_user
+        state.created_on = datetime.now()
+        state.modified_on = datetime.now()
+        state.save()

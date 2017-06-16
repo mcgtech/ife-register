@@ -168,7 +168,7 @@ def send_email(details, request):
         )
         email.attach_alternative(html_content, "text/html")
         email.send(False)
-        msg_once_only(request, 'Email sent to ' + to_addresses, settings.SUCC_MSG_TYPE)
+        msg_once_only(request, 'Email sent to ' + str(to_addresses), settings.SUCC_MSG_TYPE)
     except Exception as e:
-        msg_once_only(request, 'Failed to email ' + to_addresses + ' as an exception occurred: ' + str(e), settings.ERR_MSG_TYPE)
+        msg_once_only(request, 'Failed to email ' + str(to_addresses) + ' as an exception occurred: ' + str(e), settings.ERR_MSG_TYPE)
 

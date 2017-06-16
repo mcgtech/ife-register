@@ -85,7 +85,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
             save_many_relationship(phone_form_set)
             if request.POST.get("approve-app"):
                 handle_engineer_approval(request, config.primary_entity)
-            elif request.POST.get("reject-contract"):
+            elif request.POST.get("reject-app"):
                 handle_engineer_rejection(request, config.primary_entity)
             elif user_is_engineer and application_has_been_submitted(config.primary_entity):
                 handle_engineer_modifed_application(request, config.primary_entity)
@@ -116,6 +116,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
     form_errors = primary_entity_form_errors + address_form_errors
     set_deletion_status_in_js_data(js_dict, request.user, admin_user)
     js_dict['show_log'] = show_log(request)
+    set_deletion_status_in_js_data(js_dict, request.user, approver_user)
     js_data = json.dumps(js_dict)
     state_buttons = get_state_buttons_to_display(config, request)
 
@@ -127,7 +128,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
                                                            'js_data' : js_data,
                                                            'config' : config,
                                                            'state_buttons' : state_buttons,
-                                                           'display_accept' : settings.DISPLAY_REJECT,
+                                                           'display_reject' : settings.DISPLAY_REJECT,
                                                            'display_approve' : settings.DISPLAY_APPROVE,
                                                            'form_errors': form_errors,})
 
@@ -155,7 +156,7 @@ def handle_engineer_state_change(request, engineer, new_state, new_state_str):
     body = 'Dear ' + engineer.get_full_name()
     body += '<br>you application has been ' + new_state_str
     from_add = config.GEN_FROM_EMAIL_ADDRESS
-    to_add = engineer.user.email
+    to_add = str(engineer.user.email)
     cc = None
     bcc = None
     details = EmailDetails(body, body, 'Fire application ' + new_state_str, from_add, to_add, cc, bcc)
@@ -171,9 +172,8 @@ def get_state_buttons_to_display(config, request):
         status = latest_state.status
         if engineer_can_be_approved(status, request):
             buttons.append(settings.DISPLAY_APPROVE)
-        elif engineer_can_be_rejected(status, request):
+        if engineer_can_be_rejected(status, request):
             buttons.append(settings.DISPLAY_REJECT)
-
     return buttons
 
 
@@ -182,7 +182,7 @@ def engineer_can_be_approved(status, request):
 
 
 def engineer_can_be_rejected(status, request):
-    return approver_user(request.user) and status == ApplicationStatus.APP;
+    return approver_user(request.user) and status == ApplicationStatus.SUB;
 
 
 def get_phones_formset(config, engineer_id):

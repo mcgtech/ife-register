@@ -5,6 +5,7 @@ from register.views import add_new_application_state
 from django.conf import settings
 from django.contrib.auth.models import Group
 from register.models import ApplicationStatus
+from common.views import apply_auditable_info
 
 def engineer_signup(request):
     if request.method == 'POST':
@@ -16,6 +17,7 @@ def engineer_signup(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             engineer = Engineer.objects.create(user=user) # see also engineer_group_receiver for when user added to engineer group via admin
+            apply_auditable_info(engineer, request)
             engineer.save()
             engineer_group = Group.objects.get(name=settings.ENGINEER_GROUP)
             engineer_group.user_set.add(user)

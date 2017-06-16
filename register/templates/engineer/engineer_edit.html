@@ -27,6 +27,16 @@
     {% load crispy_forms_tags %}
     <form action="{{ config.the_action }}" method="POST" id="engineer_edit_form" class="engineer_details">
         {% crispy form %}
+        <div id="work_flow_buttons">
+            {% if display_approve in state_buttons %}
+                <button type="submit" value="Approve" name="approve-app" class="save_butt btn btn-default">
+                    <span class="glyphicon glyphicon-ok"></span>Approve</button>
+            {% endif %}
+            {% if display_reject in state_buttons %}
+                <button type="submit" value="Reject" name="reject-app" class="save_butt btn btn-warning">
+                    <span class="glyphicon glyphicon-remove"></span>Reject</button>
+            {% endif %}
+        </div>
         <div id="user" class="tab-pane">
             {% crispy user_form %}
         </div>
@@ -38,16 +48,6 @@
         </div>
         <div id="app_status_table" class="tab-pane">
             {% include 'engineer/application_status.html' %}
-        </div>
-        <div id="work_flow_buttons">
-            {% if display_approve in state_buttons %}
-                <button type="submit" value="Approve" name="approve-app" class="save_butt btn btn-default">
-                    <span class="glyphicon glyphicon-ok"></span>Approve</button>
-            {% endif %}
-            {% if display_reject in state_buttons %}
-                <button type="submit" value="Reject" name="reject-app" class="save_butt btn btn-warning">
-                    <span class="glyphicon glyphicon-remove"></span>Reject</button>
-            {% endif %}
         </div>
     </form>
 

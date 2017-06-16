@@ -112,6 +112,14 @@ class Engineer(Auditable):
 
         return full_name
 
+    def get_submission_date(self):
+        sub_date = None
+        subs = self.engineer_status.filter(status=ApplicationStatus.SUB).order_by('-modified_on')
+        if subs is not None and len(subs) > 0:
+            latest_sub = subs.last()
+            sub_date = latest_sub.created_on
+        return sub_date
+
     def get_ordered_status(self):
         return self.engineer_status.all().order_by('-modified_on')
 

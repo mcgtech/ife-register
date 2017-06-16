@@ -36,6 +36,19 @@
         <div id="phones" class="tab-pane">
             {% crispy phone_form_set phone_helper %}
         </div>
+        <div id="app_status_table" class="tab-pane">
+            {% include 'engineer/application_status.html' %}
+        </div>
+        <div id="work_flow_buttons">
+            {% if display_approve in state_buttons %}
+                <button type="submit" value="Approve" name="approve-app" class="save_butt btn btn-default">
+                    <span class="glyphicon glyphicon-ok"></span>Approve</button>
+            {% endif %}
+            {% if display_reject in state_buttons %}
+                <button type="submit" value="Reject" name="reject-app" class="save_butt btn btn-warning">
+                    <span class="glyphicon glyphicon-remove"></span>Reject</button>
+            {% endif %}
+        </div>
     </form>
 
 {% endblock %}

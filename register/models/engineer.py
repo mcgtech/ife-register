@@ -112,6 +112,12 @@ class Engineer(Auditable):
 
         return full_name
 
+    def get_ordered_status(self):
+        return self.engineer_status.all().order_by('-modified_on')
+
+    def get_latest_status(self):
+        return self.get_ordered_status().first()
+
     def __str__(self):
         return self.get_full_name()
 
@@ -156,3 +162,26 @@ class Telephone(models.Model):
 
     def __str__(self):
        return self.number + ' (' + self.get_type_display() + ')'
+
+
+class ApplicationStatus(Auditable):
+    NY_SUB = 0
+    SUB = 1
+    APP = 2
+    REJ = 3
+    EXP = 4
+    STATUS = (
+        (NY_SUB, 'Not Yet Submitted'),
+        (SUB, 'Submitted'),
+        (APP, 'Approved'),
+        (REJ, 'Rejected'),
+        (EXP, 'Expired'),
+    )
+    status = models.IntegerField(choices=STATUS, default=NY_SUB)
+    engineer = models.ForeignKey(Engineer, on_delete=models.CASCADE, null=True, related_name="engineer_status")
+
+    def get_summary(self):
+        return self.get_status_display() + ' - ' + self.modified_on.strftime(settings.DISPLAY_DATE_TIME)
+
+    def __str__(self):
+       return self.get_status_display() + ' - ' + str(self.engineer)

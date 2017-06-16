@@ -1,0 +1,22 @@
+<table class="table table-bordered" id="app_status">
+  <thead>
+    <tr>
+      <th>State</th>
+      <th>Created by</th>
+      <th>Created on</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for status in status_list %}
+      <tr>
+        <td>{{ status.get_status_display }}</td>
+        <td>{{ status.created_by }}</td>
+        <td>{{ status.created_on }}</td>
+      </tr>
+    {% empty %}
+      <tr class="no_data">
+        <td colspan="3">No data</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

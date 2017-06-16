@@ -18,7 +18,7 @@ class EngineerForm(EditForm, AuditableForm):
         super().__init__(*args, **kwargs)
         con_dets_help = '<p>Please let us know how we can contact you.</p>'
         con_dets_help += '<p>When you are done here work through the other tabs to finish your application.</p>'
-        con_dets_help += '<p>Click <strong>Submit Application</strong> when you are done.</p>'
+        con_dets_help += '<p>Click <strong>Submit Your Application</strong> when you are done.</p>'
         con_dets_help = get_help_markup(con_dets_help)
         exp_help = '<p>Tell us little about your experience before moving on to the next tab.</p>'
         exp_help += '<p>You can go back and change details on any tab at any point before you submit your application, but we would appreciate it if you can fill in as much information as possible.</p>'
@@ -52,6 +52,9 @@ class EngineerForm(EditForm, AuditableForm):
                             Div(PrependedText('pi_insurance_cover', get_base_ccy_prefix()), 'pi_renewal_date', css_class="col-sm-6"),
                             Div('pi_company', css_class="col-sm-6")),
                         ),
+                    Tab(
+                        'Application Status',
+                    ),
                     Tab(
                         'Log',
                         'created_by',

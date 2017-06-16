@@ -15,7 +15,7 @@ from django_tables2 import SingleTableView
 # https://django-filter.readthedocs.io/en/develop/guide/usage.html#the-template
 # restrict access: # https://github.com/brack3t/django-braces & http://django-braces.readthedocs.io/en/v1.4.0/access.html#loginrequiredmixin
 class EngineerViewFilter(GroupRequiredMixin, FilterView, SingleTableView):
-    group_required = [settings.ADMIN_GROUP]
+    group_required = [settings.APPROVER_GROUP, settings.ADMIN_GROUP]
     model = Engineer
     table_class = EngineerTable # /Users/stephenmcgonigal/django_projs/client/tables.py
     filterset_class = EngineerFilter # see /Users/stephenmcgonigal/django_projs/client/filters.py

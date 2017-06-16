@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.forms import inlineformset_factory
 from common.views.auditable import apply_auditable_info
 from common.views.authentication import *
+from django.core.mail import EmailMultiAlternatives
+from register.models import ApplicationStatus
 
 def home_page(request):
     return render(request, 'home_page.html', {})
@@ -39,12 +41,18 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
         else:
             cancel_url = redirect(cancel_redirect_name).url
     save_text = ''
-    if engineer_user(request.user) and primary_entity.title is None:
-        save_text = 'Submit Application'
+    if engineer_user(request.user) and application_has_been_submitted(primary_entity) == False:
+        save_text = 'Submit Your Application'
     elif engineer_user(request.user):
-        save_text = 'Submit Changes'
+        save_text = 'Submit Your Changes'
+    else:
+        save_text = 'Save'
 
     return EditConfig(primary_entity, the_action_text, is_edit_form, action, can_delete, class_name, cancel_url, primary_id, request, parent_id, save_text)
+
+def application_has_been_submitted(primary_entity):
+    latest_state = primary_entity.get_latest_status()
+    return latest_state.status != ApplicationStatus.NY_SUB
 
 
 def get_form_add_url(parent_id, class_name):
@@ -138,3 +146,29 @@ def save_many_relationship(form_set, auditable = False, request = None, target =
                     instance.save()
                 else:
                     form.save()
+
+EmailDetails = namedtuple('EmailDetails', 'html_body plain_body subject from_address to_addresses cc_addresses bcc_addresses')
+def send_email(details, request):
+    html_content = details.html_body
+    plain_content = details.plain_body
+    subject = details.subject
+    from_email = details.from_address
+    to_addresses = details.to_addresses.split(",")
+    cc_addresses = details.cc_addresses.split(",") if details.cc_addresses is not None else ''
+    bcc_addresses = details.bcc_addresses.split(",") if details.bcc_addresses is not None else ''
+    # https://docs.djangoproject.com/en/1.11/topics/email/
+    try:
+        email = EmailMultiAlternatives(
+            subject = subject,
+            body = plain_content,
+            from_email = from_email,
+            to = to_addresses,
+            cc = cc_addresses,
+            bcc = bcc_addresses,
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(False)
+        msg_once_only(request, 'Email sent to ' + to_addresses, settings.SUCC_MSG_TYPE)
+    except Exception as e:
+        msg_once_only(request, 'Failed to email ' + to_addresses + ' as an exception occurred: ' + str(e), settings.ERR_MSG_TYPE)
+

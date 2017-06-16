@@ -1,3 +1,4 @@
+time: 3 days
 
 cd /Users/stephenmcgonigal/fire_django
 source fireenv/bin/activate

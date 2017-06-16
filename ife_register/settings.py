@@ -55,6 +55,7 @@ CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG = {
     'GEN_FROM_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'General from address'),
+    'MODIFICATION_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'Who to inform of modifications'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -207,3 +208,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# status approval
+DISPLAY_APPROVE = 0
+DISPLAY_REJECT = 1

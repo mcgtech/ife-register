@@ -1,8 +1,10 @@
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from register.forms import *
+from register.views import add_new_application_state
 from django.conf import settings
 from django.contrib.auth.models import Group
+from register.models import ApplicationStatus
 
 def engineer_signup(request):
     if request.method == 'POST':
@@ -18,6 +20,7 @@ def engineer_signup(request):
             engineer_group = Group.objects.get(name=settings.ENGINEER_GROUP)
             engineer_group.user_set.add(user)
             engineer_group.save()
+            add_new_application_state(request, engineer, ApplicationStatus.NY_SUB)
             return redirect('engineer_app_edit', user_pk=user.id)
     else:
         form = EngineerSignUpForm()

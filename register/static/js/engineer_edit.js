@@ -2,7 +2,13 @@ $(function(){
     setup_contact_details();
     setup_datepickers();
     handle_log_visibility();
+    setup_app_status();
 });
+
+function setup_app_status()
+{
+    $('#app_status_table').appendTo('#application-status');
+}
 
 function handle_log_visibility()
 {

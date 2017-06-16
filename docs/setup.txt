@@ -2,6 +2,7 @@
 cd /Users/stephenmcgonigal/fire_django
 source fireenv/bin/activate
 
+
 python manage.py runserver
 
 

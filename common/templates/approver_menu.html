@@ -1,0 +1,17 @@
+{% load common_extras %}
+<li><a href="/accounts/password_change/">Profile</a></li>
+{% if request.user|has_group:settings.ADMIN_GROUP %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
+        <ul class="dropdown-menu dropdownhover-top">
+            <li><a href="/admin">Admin Screens</a></li>
+        </ul>
+    </li>
+{% endif %}
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Register<span class="caret"></span></a>
+    <ul class="dropdown-menu dropdownhover-top">
+        <li><a href="{% url 'engineer_search' %}">Search</a></li>
+        <li><a href="{% url 'engineer_new' %}">Add Engineer</a></li>
+    </ul>
+</li>

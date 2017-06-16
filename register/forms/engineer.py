@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'username')
+        fields = ('first_name', 'last_name', 'email')
 
 # had to use helper as shown in https://blog.bixly.com/awesome-forms-django-crispy-forms
 # otherwise tabs doesn't work
@@ -18,7 +18,7 @@ class EngineerForm(EditForm, AuditableForm):
         super().__init__(*args, **kwargs)
         con_dets_help = '<p>Please let us know how we can contact you.</p>'
         con_dets_help += '<p>When you are done here work through the other tabs to finish your application.</p>'
-        con_dets_help += '<p>Click submit when you are done.</p>'
+        con_dets_help += '<p>Click <strong>Submit Application</strong> when you are done.</p>'
         con_dets_help = get_help_markup(con_dets_help)
         exp_help = '<p>Tell us little about your experience before moving on to the next tab.</p>'
         exp_help += '<p>You can go back and change details on any tab at any point before you submit your application, but we would appreciate it if you can fill in as much information as possible.</p>'
@@ -73,12 +73,6 @@ class EngineerForm(EditForm, AuditableForm):
     def clean_title(self):
         return validate_required_field(self, 'title', 'title')
 
-    # def clean_forename(self):
-    #     return validate_required_field(self, 'forename', 'forename')
-    #
-    # def clean_surname(self):
-    #     return validate_required_field(self, 'surname', 'surname')
-
     class Meta(AuditableForm.Meta):
         model = Engineer
         fields = get_auditable_fields() + ('title',
@@ -129,7 +123,7 @@ class AddressForm(forms.ModelForm):
     # and if that tab is not on display then the user will not see the error, hence I took the following approach:
     # validate required fields and display error at field level
     def clean_line_1(self):
-        return validate_required_field(self, 'line_1', 'line 1')
+        return validate_required_field(self, 'line_1', 'address line 1')
 
     def clean_post_code(self):
         return validate_required_field(self, 'post_code', 'postal code')

@@ -11,30 +11,34 @@ from common.views import *
 from collections import namedtuple
 from register.models import Engineer, Address, Telephone
 from common.forms import *
-
-
-def engineer_application(request):
-    return manage_engineer(request, None, True)
-
+from django.http import HttpResponse
 
 @login_required
 @user_passes_test(approver_user, 'ife_register_login')
 def engineer_new(request):
-    return manage_engineer(request, None, False)
-
+    return manage_engineer(request, None)
 
 @login_required
-# TODO: ensure engineer can only edit thier own but approver can edit any
+@user_passes_test(engineer_user, 'ife_register_login')
+def engineer_applicant_edit(request, user_pk):
+    engineer = Engineer.objects.get(user_id=user_pk)
+    return manage_engineer(request, engineer.id)
+
+@login_required
 @user_passes_test(approver_user, 'ife_register_login')
 def engineer_edit(request, pk):
-    return manage_engineer(request, pk, False)
+        return manage_engineer(request, pk)
 
 def show_log(request):
     return request is None or (anonymous_user(request.user) == False and engineer_user(request.user) == False)
 
 def get_user_for_engineer_form(request, engineer_id):
     if approver_user(request.user):
-        target_user = Engineer.objects.get(pk=engineer_id).user
+        try:
+            engineer = Engineer.objects.get(pk=engineer_id)
+            target_user = engineer.user
+        except:
+            target_user = None
     else:
         target_user = request.user
     return target_user
@@ -43,7 +47,7 @@ def get_user_for_engineer_form(request, engineer_id):
 # http://stackoverflow.com/questions/29758558/inlineformset-factory-create-new-objects-and-edit-objects-after-created
 # https://gist.github.com/ibarovic/3092910
 @transaction.atomic
-def manage_engineer(request, engineer_id=None, registration=False):
+def manage_engineer(request, engineer_id=None):
     js_dict = {}
     del_request = None
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')

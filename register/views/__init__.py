@@ -2,3 +2,4 @@
 # https://stackoverflow.com/questions/20010991/split-views-py-into-multiple-files
 from .engineer.engineer_crud import *
 from .engineer.engineer_searching import *
+from .engineer.engineer_signup import *

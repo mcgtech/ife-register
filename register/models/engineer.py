@@ -4,8 +4,9 @@ from django_countries.fields import CountryField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
-from common.views.authentication import engineer_user
+# from common.views.authentication import engineer_user
 from django.contrib.auth.models import Group
+from django.conf import settings
 
 # see https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html
 # to see how I attach associate person with address
@@ -43,7 +44,7 @@ class Engineer(Auditable):
     )
     # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    title = models.IntegerField( null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
+    title = models.IntegerField(null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
     employer = models.CharField(max_length=200, blank=True, verbose_name='Current employer')
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
@@ -115,20 +116,20 @@ class Engineer(Auditable):
         return self.get_full_name()
 
 # https://simpleisbetterthancomplex.com/tutorial/2016/06/27/how-to-use-djangos-built-in-login-system.html
+# if user added to engineer group then create and associate an Engineer object to them
 @receiver(m2m_changed)
-def my_receiver(**kwargs):
+def engineer_group_receiver(**kwargs):
     action = kwargs['action']
     pk_set = kwargs['pk_set']
     sender_model = kwargs['sender']
     instance = kwargs['instance']
     sender_model_name = sender_model.__name__
     if action == 'post_add' and sender_model_name == 'User_groups':
-        engineer_group = Group.objects.get(name='engineer')
+        engineer_group = Group.objects.get(name=settings.ENGINEER_GROUP)
         engineer_group_pk = engineer_group.pk
-        print(kwargs)
         if engineer_group_pk in pk_set:
             try:
-                Engineer.object.get(user=instance)
+                Engineer.objects.get(user=instance)
             except:
                 # if the user (instance) does not have an engineer object then add one
                 Engineer.objects.create(user=instance)

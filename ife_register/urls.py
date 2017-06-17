@@ -26,7 +26,7 @@ from django.contrib.auth.views import password_reset, password_reset_done, passw
 
 #https://simpleisbetterthancomplex.com/tutorial/2016/09/19/how-to-create-password-reset-view.html
 urlpatterns = [
-    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow:", content_type="text/plain"), name="robots_file"),
+    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow: /", content_type="text/plain"), name="robots_file"),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home_page, name='home_page'),
     url(r'^accounts/login/$', login, {'template_name': 'login.html'}, name='ife_register_login'),

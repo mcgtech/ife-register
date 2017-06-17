@@ -57,5 +57,5 @@ function setup_phone_formsets()
 function setup_datepickers()
 {
     var options = get_basic_date_picker_options();
-    $("#id_engineer-pi_renewal_date").datepicker(options);
+    $("#id_engineer-pi_renewal_date, #id_engineer-ife_member_reg_date, #id_engineer-ec_member_reg_date, #id_engineer-other_inst_reg_date").datepicker(options);
 }

@@ -1,8 +1,11 @@
-
+cd fire_django
+virtualenv --python=python3.5 fire_env
 
 
 
 uses sqllite
+
+manual, python 3.5
 /var/www/mcgtech_pythonanywhere_com_wsgi.py
 import os
 import sys

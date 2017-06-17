@@ -20,11 +20,13 @@ from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 from common import views
 from django.conf import settings
+from django.http import HttpResponse
 from django.conf.urls.static import static
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete, password_change
 
 #https://simpleisbetterthancomplex.com/tutorial/2016/09/19/how-to-create-password-reset-view.html
 urlpatterns = [
+    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow:", content_type="text/plain"), name="robots_file"),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home_page, name='home_page'),
     url(r'^accounts/login/$', login, {'template_name': 'login.html'}, name='ife_register_login'),

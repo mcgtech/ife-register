@@ -52,9 +52,11 @@
         <div id="app_status_table" class="tab-pane">
             {% include 'engineer/application_status.html' %}
         </div>
-        <div id="print_buttons" class="row">
-            <div class="col-sm-1"><input type="button" name="print-con" value="Print" class="btn btn btn-default print-btn" id="print-eng"></div>
-        </div>
+        {% if show_print %}
+            <div id="print_buttons" class="row">
+                <div class="col-sm-1"><input type="button" name="print-con" value="Print" class="btn btn btn-default print-btn" id="print-eng"></div>
+            </div>
+        {% endif %}
     </form>
 
 {% endblock %}

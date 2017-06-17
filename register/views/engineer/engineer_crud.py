@@ -110,6 +110,8 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
         add_msg = 'Adding a new ' + config.class_name
         msg_once_only(request, add_msg, settings.WARN_MSG_TYPE)
 
+    latest_state = config.primary_entity.get_latest_status()
+    show_print = (user_is_engineer and latest_state.status == ApplicationStatus.NY_SUB) == False
     status_list = config.primary_entity.get_ordered_status()
 
     primary_entity_form_errors = form_errors_as_array(primary_entity_form)
@@ -126,6 +128,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
                                                            'user_form': user_form,
                                                            'address_form': address_form,
                                                            'status_list' : status_list,
+                                                           'show_print' : show_print,
                                                            'phone_form_set': phone_form_set, 'phone_helper': phone_helper,
                                                            'js_data' : js_data,
                                                            'config' : config,

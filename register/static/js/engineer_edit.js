@@ -4,6 +4,7 @@ $(function(){
     handle_log_visibility();
     setup_app_status();
     add_printing();
+    setup_download_csv();
 });
 
 function add_printing()

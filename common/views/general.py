@@ -135,6 +135,11 @@ def get_extras_for_formset(set):
     return 1 if len(set) == 0 else 0
 
 
+def get_query_by_key(request, key):
+    value = None
+    if request.GET is not None and key in request.GET:
+        value = request.GET[key]
+    return value
 
 def save_many_relationship(form_set, auditable = False, request = None, target = None):
     for form in form_set.forms:

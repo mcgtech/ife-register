@@ -151,15 +151,15 @@ class Engineer(Auditable):
 
     def awaiting_approval(self):
         latest_state = self.get_latest_status()
-        return latest_state.status == ApplicationStatus.SUB
+        return int(latest_state.status) == int(ApplicationStatus.NY_SUB)
 
     def rejected(self):
         latest_state = self.get_latest_status()
-        return latest_state.status == ApplicationStatus.REJ
+        return int(latest_state.status) == int(ApplicationStatus.REJ)
 
     def expired(self):
         latest_state = self.get_latest_status()
-        return latest_state.status == ApplicationStatus.EXP
+        return int(latest_state.status) == int(ApplicationStatus.EXP)
 
     def __str__(self):
         return self.get_full_name()

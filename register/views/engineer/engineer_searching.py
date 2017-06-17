@@ -41,8 +41,8 @@ class EngineerViewFilter(GroupRequiredMixin, FilterView, SingleTableView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="engineers.csv"'
         writer = csv.writer(response)
-        writer.writerow(['id', 'ife_member_grade', 'first_name', 'last_name', 'address_line1', 'postcode', 'ife_member_no', 'ife_member_reg_date'])
-        engineers = filtered_queries.values_list('id', 'user__first_name', 'user__last_name', 'address__line_1', 'address__post_code', 'ife_member_grade', 'ife_member_no', 'ife_member_reg_date')
+        writer.writerow(['id', 'first_name', 'last_name', 'address_line1', 'postcode', 'ife_member_no', 'ife_member_reg_date'])
+        engineers = filtered_queries.values_list('id', 'user__first_name', 'user__last_name', 'address__line_1', 'address__post_code', 'ife_member_no', 'ife_member_reg_date')
         for engineer in engineers:
             writer.writerow(engineer)
         context['csv_response'] = response

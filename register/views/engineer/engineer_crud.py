@@ -91,6 +91,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
                 action = 'engineer_welcome'
             elif user_is_engineer:
                 handle_engineer_modifed_application(request, config.primary_entity)
+                msg_once_only(request, 'Changes submitted.', settings.SUCC_MSG_TYPE)
             else:
                 msg_once_only(request, 'Saved ' + config.class_name, settings.SUCC_MSG_TYPE)
 

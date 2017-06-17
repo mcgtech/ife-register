@@ -86,9 +86,9 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
             elif request.POST.get("reject-app"):
                 handle_engineer_rejection(request, config.primary_entity)
             elif user_is_engineer and config.primary_entity.awaiting_approval():
-                handle_engineer_modifed_application(request, config.primary_entity)
-            elif user_is_engineer:
                 handle_engineer_submitted(request, config.primary_entity)
+            elif user_is_engineer:
+                handle_engineer_modifed_application(request, config.primary_entity)
             else:
                 msg_once_only(request, 'Saved ' + config.class_name, settings.SUCC_MSG_TYPE)
 

@@ -81,21 +81,24 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
             created_primary_entity.save()
             phone_form_set = get_phones_formset(config, engineer_id)
             save_many_relationship(phone_form_set)
+            action = None
             if request.POST.get("approve-app"):
                 handle_engineer_approval(request, config.primary_entity)
             elif request.POST.get("reject-app"):
                 handle_engineer_rejection(request, config.primary_entity)
             elif user_is_engineer and config.primary_entity.awaiting_approval():
                 handle_engineer_submitted(request, config.primary_entity)
+                action = 'engineer_welcome'
             elif user_is_engineer:
                 handle_engineer_modifed_application(request, config.primary_entity)
             else:
                 msg_once_only(request, 'Saved ' + config.class_name, settings.SUCC_MSG_TYPE)
 
-            if user_is_engineer:
-                action = '/engineer_app_edit/' + str(target_user.id)
-            else:
-                action = get_form_edit_url(None, created_primary_entity.id, config.class_name)
+            if action is None:
+                if user_is_engineer:
+                    action = '/engineer_app_edit/' + str(target_user.id)
+                else:
+                    action = get_form_edit_url(None, created_primary_entity.id, config.class_name)
             return redirect(action)
     else:
         address_form = AddressForm(instance=address, prefix="address")

@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <link media="screen" rel="stylesheet" href="{% static 'css/reporting_screen.css' %}">
+        <link media="print" rel="stylesheet" href="{% static 'css/reporting_print.css' %}">
+        {% block js %}
+        {% endblock %}
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

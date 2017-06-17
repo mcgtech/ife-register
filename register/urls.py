@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^engineer/new/$', views.engineer_new, name='engineer_new'),
     url(r'^engineer/(?P<pk>\d+)/edit/$', views.engineer_edit, name='engineer_edit'),
     url(r'^engineer_search/$', EngineerViewFilter.as_view(), name='engineer_search'),
+    url(r'^print_engineer/(?P<eng_id>\d+)/$', print_engineer, name='print_engineer'),
 ]

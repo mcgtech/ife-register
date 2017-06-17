@@ -10,21 +10,24 @@
 {% load staticfiles %}
 
 {% block css %}
-    {% include 'partials/summernote_editor_css_includes.html' %}
+    {% include 'partials/ajax_loading_css_includes.html' %}
     <link rel="stylesheet" href="{% static 'css/engineer_edit.css' %}">
 {% endblock %}
 
 {% block js %}
+    {% include 'partials/ajax_loading_js_includes.html' %}
     {% include 'partials/inject_js_data.html' %}
-    {% include 'partials/summernote_editor_js_includes.html' %}
     {% include 'partials/form_edit_js_includes.html' %}
     {% include 'partials/datepicker_js_includes.html' %}
     {% include 'partials/formset_js_includes.html' %}
+    {% include 'partials/bootbox_js_includes.html' %}
+    <script type="text/javascript" src="{% static 'js/printThis/printThis.js' %}"></script>
     {% include 'partials/ideal_postcodes_js_includes.html' %}
     <script type="text/javascript" src="{% static 'js/engineer_edit.js' %}"></script>
 {% endblock %}
 {% block content %}
     {% load crispy_forms_tags %}
+    {% include 'partials/printing_block.html' %}
     <form action="{{ config.the_action }}" method="POST" id="engineer_edit_form" class="engineer_details">
         {% crispy form %}
         <div id="work_flow_buttons">
@@ -48,6 +51,9 @@
         </div>
         <div id="app_status_table" class="tab-pane">
             {% include 'engineer/application_status.html' %}
+        </div>
+        <div id="print_buttons" class="row">
+            <div class="col-sm-1"><input type="button" name="print-con" value="Print" class="btn btn btn-default print-btn" id="print-eng"></div>
         </div>
     </form>
 

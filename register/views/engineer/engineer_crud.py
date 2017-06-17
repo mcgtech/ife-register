@@ -115,6 +115,7 @@ def manage_engineer(request, engineer_id=None, user_is_engineer = False):
     set_deletion_status_in_js_data(js_dict, request.user, admin_user)
     js_dict['show_log'] = show_log(request)
     set_deletion_status_in_js_data(js_dict, request.user, approver_user)
+    js_dict['eng_id'] = config.primary_entity.id
     js_data = json.dumps(js_dict)
     state_buttons = get_state_buttons_to_display(config, request)
 

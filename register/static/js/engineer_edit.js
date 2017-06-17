@@ -3,7 +3,26 @@ $(function(){
     setup_datepickers();
     handle_log_visibility();
     setup_app_status();
+    add_printing();
 });
+
+function add_printing()
+{
+    $('#print-eng').click(function(){
+        var url = '/print_engineer/' + data_from_django.eng_id + '/';
+        $('#print_area').html('').load(url, '', function(response, status, xhr) {
+            if (status == 'error')
+            {
+                var msg = "Sorry but there was a printing error: " + xhr.status + " " + xhr.statusText;
+                bootbox.alert(msg);
+            }
+            else
+            {
+                $('#print_area').printThis();
+            }
+            });
+    });
+}
 
 function setup_app_status()
 {

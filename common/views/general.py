@@ -49,7 +49,7 @@ def get_form_edit_config(primary_id, parent_id, primary_class, request, cancel_r
             cancel_url = redirect(cancel_redirect_name).url
     save_text = ''
     if engineer_user(request.user) and primary_entity.awaiting_approval():
-        save_text = 'Submit Your Changes'
+        save_text = 'Submit Your Application'
     elif engineer_user(request.user) and (primary_entity.rejected() or primary_entity.expired()):
         save_text = 'Resubmit Your Application'
     elif engineer_user(request.user):

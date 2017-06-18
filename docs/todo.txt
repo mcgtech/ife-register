@@ -9,3 +9,4 @@ backup rec strat
 on reject allow adding a reason
 verifier login
 allow to change email address
+install session timeout http://django-session-security.readthedocs.io/en/latest/quick.html

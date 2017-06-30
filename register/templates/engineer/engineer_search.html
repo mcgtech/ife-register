@@ -9,6 +9,8 @@
     {% include 'partials/django_tables2_css_includes.html' %}
 {% endblock %}
 {% block js %}
+    {% include 'partials/url_helpers_js_include.html' %}
+    <script type="text/javascript" src="{% static 'js/engineer_search.js' %}"></script>
     {% include 'partials/django_tables2_js_includes.html' %}
     {% include 'partials/datepicker_js_includes.html' %}
 {% endblock %}
@@ -18,15 +20,28 @@
     <div class="well">
       <!--# if I change this then also change: /Users/stephenmcgonigal/django_projs/client/filters.py -->
       <div class="row">
-{#        <div class="form-group col-sm-3">#}
-{#          {{ filter.form.forename.label_tag }}#}
-{#          {% render_field filter.form.forename class="form-control" %}#}
-{#        </div>#}
+        <div class="form-group col-sm-3">
+          {{ filter.form.name.label_tag }}
+          {% render_field filter.form.name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-3">
+          {{ filter.form.employer.label_tag }}
+          {% render_field filter.form.employer class="form-control" %}
+        </div>
+        <div class="form-group col-sm-3">
+          {{ filter.form.sub_from.label_tag }}
+          {% render_field filter.form.sub_from class="form-control datepicker" %}
+        </div>
+        <div class="form-group col-sm-3">
+          {{ filter.form.status.label_tag }}
+          {% render_field filter.form.status class="form-control" %}
+        </div>
       </div>
       {% include 'partials/filter_buttons.html' %}
-      <button style="float:right;" type="button" onclick="javascript:window.location='{% url 'engineer_new' %}';" class="btn btn-success">
-        <span class="glyphicon glyphicon-plus"></span> Engineer
-      </button>
+        <button type="button" id="download_csv" class="btn btn-default"><span class="glyphicon glyphicon-download"></span> Download csv</button>
+{#      <button style="float:right;" type="button" onclick="javascript:window.location='{% url 'engineer_new' %}';" class="btn btn-success">#}
+{#        <span class="glyphicon glyphicon-plus"></span> Engineer#}
+{#      </button>#}
     </div>
   </form>
   {% load render_table from django_tables2 %}

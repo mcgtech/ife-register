@@ -2,7 +2,33 @@ $(function(){
     setup_contact_details();
     setup_datepickers();
     handle_log_visibility();
+    setup_app_status();
+    add_printing();
+    setup_download_csv();
 });
+
+function add_printing()
+{
+    $('#print-eng').click(function(){
+        var url = '/print_engineer/' + data_from_django.eng_id + '/';
+        $('#print_area').html('').load(url, '', function(response, status, xhr) {
+            if (status == 'error')
+            {
+                var msg = "Sorry but there was a printing error: " + xhr.status + " " + xhr.statusText;
+                bootbox.alert(msg);
+            }
+            else
+            {
+                $('#print_area').printThis();
+            }
+            });
+    });
+}
+
+function setup_app_status()
+{
+    $('#app_status_table').appendTo('#application-status');
+}
 
 function handle_log_visibility()
 {
@@ -32,5 +58,5 @@ function setup_phone_formsets()
 function setup_datepickers()
 {
     var options = get_basic_date_picker_options();
-    $("#id_engineer-pi_renewal_date").datepicker(options);
+    $("#id_engineer-pi_renewal_date, #id_engineer-ife_member_reg_date, #id_engineer-ec_member_reg_date, #id_engineer-other_inst_reg_date").datepicker(options);
 }

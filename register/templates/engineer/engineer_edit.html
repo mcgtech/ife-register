@@ -10,23 +10,36 @@
 {% load staticfiles %}
 
 {% block css %}
-    {% include 'partials/summernote_editor_css_includes.html' %}
+    {% include 'partials/ajax_loading_css_includes.html' %}
     <link rel="stylesheet" href="{% static 'css/engineer_edit.css' %}">
 {% endblock %}
 
 {% block js %}
+    {% include 'partials/ajax_loading_js_includes.html' %}
     {% include 'partials/inject_js_data.html' %}
-    {% include 'partials/summernote_editor_js_includes.html' %}
     {% include 'partials/form_edit_js_includes.html' %}
     {% include 'partials/datepicker_js_includes.html' %}
     {% include 'partials/formset_js_includes.html' %}
+    {% include 'partials/bootbox_js_includes.html' %}
+    <script type="text/javascript" src="{% static 'js/printThis/printThis.js' %}"></script>
     {% include 'partials/ideal_postcodes_js_includes.html' %}
     <script type="text/javascript" src="{% static 'js/engineer_edit.js' %}"></script>
 {% endblock %}
 {% block content %}
     {% load crispy_forms_tags %}
+    {% include 'partials/printing_block.html' %}
     <form action="{{ config.the_action }}" method="POST" id="engineer_edit_form" class="engineer_details">
         {% crispy form %}
+        <div id="work_flow_buttons">
+            {% if display_approve in state_buttons %}
+                <button type="submit" value="Approve" name="approve-app" class="save_butt btn btn-default">
+                    <span class="glyphicon glyphicon-ok"></span>Approve</button>
+            {% endif %}
+            {% if display_reject in state_buttons %}
+                <button type="submit" value="Reject" name="reject-app" class="save_butt btn btn-warning">
+                    <span class="glyphicon glyphicon-remove"></span>Reject</button>
+            {% endif %}
+        </div>
         <div id="user" class="tab-pane">
             {% crispy user_form %}
         </div>
@@ -36,6 +49,14 @@
         <div id="phones" class="tab-pane">
             {% crispy phone_form_set phone_helper %}
         </div>
+        <div id="app_status_table" class="tab-pane">
+            {% include 'engineer/application_status.html' %}
+        </div>
+        {% if show_print %}
+            <div id="print_buttons" class="row">
+                <div class="col-sm-1"><input type="button" name="print-con" value="Print" class="btn btn btn-default print-btn" id="print-eng"></div>
+            </div>
+        {% endif %}
     </form>
 
 {% endblock %}

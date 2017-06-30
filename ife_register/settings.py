@@ -27,7 +27,7 @@ SECRET_KEY = '_3fccnu_of$+0+d^+6xna=)0+d5-m$a*2cqltgffc1=%c*ydbo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mcgtech.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -55,10 +55,11 @@ CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG = {
     'GEN_FROM_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'General from address'),
+    'APPROVER_EMAIL_ADDRESS': ('mcgonigalstephen@gmail.com', 'Who to inform of modifications'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
-    'General Options': ('GEN_FROM_EMAIL_ADDRESS',),
+    'General Options': ('GEN_FROM_EMAIL_ADDRESS', 'APPROVER_EMAIL_ADDRESS',),
 }
 
 MIDDLEWARE = [
@@ -96,18 +97,23 @@ WSGI_APPLICATION = 'ife_register.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-# postgres on digital oceans
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ife_register',
-        'USER': 'ife_admin',
-        'PASSWORD': 'saksjdsh8345$',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# postgres on digital oceans
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ife_register',
+#         'USER': 'ife_admin',
+#         'PASSWORD': 'saksjdsh8345$',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -157,7 +163,7 @@ STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'static'),)
 
 LOGIN_URL = 'ife_register_login'
 LOGOUT_URL = 'ife_register_logout'
-LOGIN_REDIRECT_URL = '/engineer_search'
+LOGIN_REDIRECT_URL = 'login_success'
 
 # https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html
 MEDIA_URL = '/media/'
@@ -207,3 +213,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# status approval
+DISPLAY_APPROVE = 0
+DISPLAY_REJECT = 1

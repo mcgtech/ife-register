@@ -1,6 +1,8 @@
+time: 3 days
 
 cd /Users/stephenmcgonigal/fire_django
 source fireenv/bin/activate
+
 
 python manage.py runserver
 
@@ -58,6 +60,8 @@ python manage.py migrate register
 
 
 python manage.py shell < all_build/setup_users_and_groups.py
+python manage.py shell < all_build/setup_test_engineers.py
+
 
 git: https://github.com/mcgtech/ife-register.git
 
@@ -72,4 +76,4 @@ source fire_env/bin/activate
 pip install --upgrade pip
 pip install Django==1.11.2
 
-then rest f install
+then rest of install

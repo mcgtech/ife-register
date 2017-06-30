@@ -1,0 +1,21 @@
+cd fire_django
+virtualenv --python=python3.5 fire_env
+
+
+
+uses sqllite
+
+manual, python 3.5
+/var/www/mcgtech_pythonanywhere_com_wsgi.py
+import os
+import sys
+
+path = os.path.expanduser('~/fire_django')
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'ife_register.settings'
+
+from django.core.wsgi import get_wsgi_application
+from django.contrib.staticfiles.handlers import StaticFilesHandler
+application = StaticFilesHandler(get_wsgi_application())

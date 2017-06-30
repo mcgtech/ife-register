@@ -20,14 +20,25 @@ from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
 from common import views
 from django.conf import settings
+from django.http import HttpResponse
 from django.conf.urls.static import static
+from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete, password_change
 
+#https://simpleisbetterthancomplex.com/tutorial/2016/09/19/how-to-create-password-reset-view.html
 urlpatterns = [
+    # https://techstricks.com/adding-robots-txt-to-your-django-project/
+    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow: /", content_type="text/plain"), name="robots_file"),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home_page, name='home_page'),
     url(r'^accounts/login/$', login, {'template_name': 'login.html'}, name='ife_register_login'),
     url(r'^accounts/logout/$', logout, {'next_page': reverse_lazy('home_page')}, name='ife_register_logout'),
+    url(r'^accounts/password_change/$', password_change, {'template_name': 'change_password.html'}, name='password_change'),
+    url(r'^accounts/password_reset/$', password_reset, {'template_name': 'password_reset_form.html'}, name='password_reset'),
+    url(r'^accounts/password_reset/done/$', password_reset_done, {'template_name': 'password_reset_done.html'}, name='password_reset_done'),
+    url(r'^accounts/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', password_reset_confirm, {'template_name': 'password_reset_confirm.html'}, name='password_reset_confirm'),
+    url(r'^accounts/reset/done/$', password_reset_complete, {'template_name': 'password_reset_complete.html'}, name='password_reset_complete'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'', include('common.urls')),
     url(r'', include('register.urls')),
 ]
 

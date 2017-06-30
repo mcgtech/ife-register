@@ -4,8 +4,9 @@ from django_countries.fields import CountryField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
-from common.views.authentication import engineer_user
+# from common.views.authentication import engineer_user
 from django.contrib.auth.models import Group
+from django.conf import settings
 
 # see https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html
 # to see how I attach associate person with address
@@ -43,7 +44,7 @@ class Engineer(Auditable):
     )
     # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    title = models.IntegerField( null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
+    title = models.IntegerField(null=True, choices=TITLES, default=None) # do this to allow creation of engineer object when user created
     employer = models.CharField(max_length=200, blank=True, verbose_name='Current employer')
     address = models.OneToOneField(Address, null=True, related_name="engineer", on_delete=models.SET_NULL)
     # ins
@@ -78,8 +79,8 @@ class Engineer(Auditable):
     EC_GRAD = 2
     EC_LIC = 3
     EC_ASSOC = 4
-    EC_MEM = 4
-    EC_FELL = 4
+    EC_MEM = 5
+    EC_FELL = 6
     ENG_COUN_GRADES = (
         (None, 'Please select'),
         (EC_AFF, 'Affiliate'),
@@ -102,6 +103,9 @@ class Engineer(Auditable):
     # cpd
     cpd = models.TextField(blank=True, verbose_name='Continual Professional Development')
 
+    class Meta:
+        ordering = ('-modified_on', )
+
     def get_full_name(self):
         full_name = self.get_title_display if self.title is not None else ''
         if self.user.first_name is not None and len(self.user.first_name) > 0:
@@ -111,24 +115,70 @@ class Engineer(Auditable):
 
         return full_name
 
+    def get_submission_date(self):
+        sub_date = None
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.SUB)
+        if latest_sub is not None:
+            sub_date = latest_sub.created_on
+        return sub_date
+
+    def get_sign_on_date(self):
+        sub_date = None
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.NY_SUB)
+        if latest_sub is not None:
+            sub_date = latest_sub.created_on
+        return sub_date
+
+    def get_approval_date(self):
+        sub_date = None
+        latest_sub = self.get_latest_status_by_type(ApplicationStatus.APP)
+        if latest_sub is not None:
+            sub_date = latest_sub.created_on
+        return sub_date
+
+    def get_latest_status_by_type(self, type):
+        latest = None
+        status_list = self.engineer_status.filter(status=type).order_by('-modified_on')
+        if status_list is not None and len(status_list) > 0:
+            latest = status_list.last()
+        return latest
+
+    def get_ordered_status(self):
+        return self.engineer_status.all().order_by('-modified_on')
+
+    def get_latest_status(self):
+        return self.get_ordered_status().first()
+
+    def awaiting_approval(self):
+        latest_state = self.get_latest_status()
+        return int(latest_state.status) == int(ApplicationStatus.NY_SUB)
+
+    def rejected(self):
+        latest_state = self.get_latest_status()
+        return int(latest_state.status) == int(ApplicationStatus.REJ)
+
+    def expired(self):
+        latest_state = self.get_latest_status()
+        return int(latest_state.status) == int(ApplicationStatus.EXP)
+
     def __str__(self):
         return self.get_full_name()
 
 # https://simpleisbetterthancomplex.com/tutorial/2016/06/27/how-to-use-djangos-built-in-login-system.html
+# if user added to engineer group then create and associate an Engineer object to them
 @receiver(m2m_changed)
-def my_receiver(**kwargs):
+def engineer_group_receiver(**kwargs):
     action = kwargs['action']
     pk_set = kwargs['pk_set']
     sender_model = kwargs['sender']
     instance = kwargs['instance']
     sender_model_name = sender_model.__name__
     if action == 'post_add' and sender_model_name == 'User_groups':
-        engineer_group = Group.objects.get(name='engineer')
+        engineer_group = Group.objects.get(name=settings.ENGINEER_GROUP)
         engineer_group_pk = engineer_group.pk
-        print(kwargs)
         if engineer_group_pk in pk_set:
             try:
-                Engineer.object.get(user=instance)
+                Engineer.objects.get(user=instance)
             except:
                 # if the user (instance) does not have an engineer object then add one
                 Engineer.objects.create(user=instance)
@@ -155,3 +205,26 @@ class Telephone(models.Model):
 
     def __str__(self):
        return self.number + ' (' + self.get_type_display() + ')'
+
+
+class ApplicationStatus(Auditable):
+    NY_SUB = 0
+    SUB = 1
+    APP = 2
+    REJ = 3
+    EXP = 4
+    STATUS = (
+        (NY_SUB, 'Not Yet Submitted'),
+        (SUB, 'Submitted'),
+        (APP, 'Approved'),
+        (REJ, 'Rejected'),
+        (EXP, 'Expired'),
+    )
+    status = models.IntegerField(choices=STATUS, default=NY_SUB)
+    engineer = models.ForeignKey(Engineer, on_delete=models.CASCADE, null=True, related_name="engineer_status")
+
+    def get_summary(self):
+        return self.get_status_display() + ' - ' + self.modified_on.strftime(settings.DISPLAY_DATE_TIME)
+
+    def __str__(self):
+       return self.get_status_display() + ' - ' + str(self.engineer)

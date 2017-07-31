@@ -141,7 +141,7 @@ LANGUAGE_CODE = 'en-GB'
 
 TIME_ZONE = 'Europe/London'
 
-USE_I18N = True
+USE_I18N = False
 
 USE_L10N = True
 

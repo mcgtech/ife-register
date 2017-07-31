@@ -50,6 +50,7 @@ def get_user_for_engineer_form(request, engineer_id):
 @transaction.atomic
 def manage_engineer(request, engineer_id=None, user_is_engineer = False):
     js_dict = {}
+    # TODO: check /var/log/django_debug.log for errors
     del_request = None
     config = get_form_edit_config(engineer_id, None, Engineer, request, 'engineer_search')
     phone_helper = PhoneFormSetHelper()
